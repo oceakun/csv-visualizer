@@ -124,6 +124,7 @@ modal.style.display = JSON.parse(window.localStorage.getItem('modal')|| '{}');;
 	window.localStorage.setItem('fileLastModified',JSON.stringify(fileLastModified));
 	window.localStorage.setItem('fileType',JSON.stringify(fileType));
 	updateFileDetailsContainer();
+	readUploadedFile()
 	};
 	}
 
@@ -148,6 +149,56 @@ modal.style.display = JSON.parse(window.localStorage.getItem('modal')|| '{}');;
 	}
 
 updateFileDetailsContainer();
+
+
+const readUploadedFile  = ()=>{
+	if (window.FileReader) {
+    // FileReader are supported.
+    getAsText(fileElem.files[0]);
+  } else {
+    alert('FileReader is not supported in this browser.');
+  }
+}
+
+function getAsText(fileToRead : any) {
+  var reader = new FileReader();
+  // Handle errors load
+  reader.onload = loadHandler;
+  reader.onerror = errorHandler;
+  // Read file into memory as UTF-8      
+  reader.readAsText(fileToRead);
+}
+
+function loadHandler(event : any) {
+  var csv = event.target.result;
+  processData(csv);
+}
+
+function processData(csv :any) {
+  var allTextLines = csv.split(/\r\n|\n/);
+  var lines = [];
+  while (allTextLines.length) {
+    lines.push(allTextLines.shift().split(','));
+  }
+  console.log(lines);
+//   drawOutput(lines);
+}
+
+function errorHandler(evt : any) {
+  if (evt.target.error.name == "NotReadableError") {
+    alert("Cannot read file !");
+  }
+}
+
+const bearerToken = import.meta.env.BEARER_TOKEN;
+console.log("bearerToken : ", bearerToken);
+
+const headers = {
+  'Accept': 'application/json',
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer ${bearerToken}`
+}
+
 </script>
 
 <style>
