@@ -1,403 +1,552 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
 ---
+
 <Layout title="csv-visualizer">
-	<div class="primaryHalf">
-		<span id="openingStatement">
-			<span id="appName">csv-visualizer</span>
-			<span id="blackText">| powered by <mark id="libName"> Grafana</mark>
-			</span>
-		</span>
-		<input type="file" id="fileElem" accept=".csv" style="display:none"/>
-		<button id="myBtn"> Upload </button>
-	</div>
-	<div id="myModal" class="modal">
-		<div id="instructions">
-			<span class="close">&times;</span>
-			<button id="fileSelect">Select a CSV file  </button>
-			<div id="uploadedFilesDetailsContainer">
-			</div>
-		</div>
-	</div>
-	<div class="secondaryHalf">
-	</div>
+    <div class="primaryHalf">
+      <span id="openingStatement">
+        <span id="appName">csv-visualizer</span>
+        <span id="blackText"
+          >| powered by <mark id="libName"> Grafana</mark>
+        </span>
+      </span>
+      <form
+        id="formFile"
+        enctype="multipart/form-data"
+        action="http://localhost:8080/api/upload"
+        method="post"
+      >
+        <input
+          type="file"
+          id="fileElem"
+          name="file"
+          accept=".csv"
+          style="display:none"
+        />
+      </form>
+
+      <div id="actionbuttons">
+        <button id="myUploadBtn"> Upload</button>
+        <div class="arrow">
+          <span></span>
+        </div>
+        <button id="myVisualizeBtn"> Visualize</button>
+        <!-- <button id="updateDashboard"> Update Dashboard</button> -->
+      </div>
+    </div>
+    <div id="myModal" class="modal">
+      <div id="instructions">
+        <span class="close">&times;</span>
+        <button id="fileSelect">Select a CSV file</button>
+        <div id="uploadedFilesDetailsContainer"></div>
+        <!-- <button id="fileSubmit">Submit</button> -->
+      </div>
+    </div>
+
+    <div class="secondaryHalf">
+      <iframe
+        src="http://localhost:3000/d-solo/Ubn81xbVk/mpd?orgId=1&from=1677693191808&to=1677714791808&panelId=2"
+        width="700"
+        height="400"
+        frameborder="0"></iframe>
+    </div>
 </Layout>
-
 <script>
+  import updateDashboard from "../components/updateDashboard";
+  import getDashboard from "../components/getDashboard";
+//  get the form
+  const formFile = document.getElementById("formFile");
 
-	// Get the modal
-const modal = document.getElementById("myModal");
+  // get the updateDashboardBtn button
+  const updateDashboardBtn = document.getElementById("updateDashboard"); 
 
-// Get the button that opens the modal
-const btn = document.getElementById("myBtn");
+  // get the myVisualizeBtn
+  const myVisualizeBtn = document.getElementById("myVisualizeBtn");
 
-// Get the <span> element that closes the modal
-const span = document.getElementsByClassName("close")[0]; 
+  // get the modal
+  const modal = document.getElementById("myModal");
 
-// get the container storing uploaded file's details
-const filesDetailsContainer = document.getElementById("uploadedFilesDetailsContainer");
+  // get the button that opens the modal
+  const myUploadBtn = document.getElementById("myUploadBtn");
 
-// When the user clicks on the button, open the modal
-btn.onclick = function() {
-window.localStorage.setItem('modal',JSON.stringify("block"));
-  modal.style.display = JSON.parse(window.localStorage.getItem('modal')|| '{}');;
-    // modal.style.marginLeft = "auto";
-    // modal.style.marginRight = "auto";
+  // get the <span> element that closes the modal
+  const span = document.getElementsByClassName("close")[0];
+
+  // get the container storing uploaded file's details
+  const filesDetailsContainer = document.getElementById(
+    "uploadedFilesDetailsContainer"
+  );
+
+  // When the user clicks on the button, open the modal
+  myUploadBtn.onclick = function () {
+    window.localStorage.setItem("modal", JSON.stringify("block"));
+    modal.style.display = JSON.parse(
+      window.localStorage.getItem("modal") || "{}"
+    );
     modal.style.flexFlow = "row nowrap";
     modal.style.justifyContent = "center";
     modal.style.alignItems = "center";
-}
+  };
 
-// When the user clicks on <span> (x), close the modal
-span.onclick = function() {
-  window.localStorage.setItem('modal',JSON.stringify("none"));
-  modal.style.display = JSON.parse(window.localStorage.getItem('modal')|| '{}');;
-}
+  // when the user clicks on myVisualizeBtn, start the visualization
+  myVisualizeBtn.onclick = function () {
+    formFile.submit();
+  };
 
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-  if (event.target == modal) {
-	window.localStorage.setItem('modal',JSON.stringify("none"));
-    modal.style.display = JSON.parse(window.localStorage.getItem('modal')|| '{}');;
+  // When the user clicks on <span> (x), close the modal
+  span.onclick = function () {
+    window.localStorage.setItem("modal", JSON.stringify("none"));
+    modal.style.display = JSON.parse(
+      window.localStorage.getItem("modal") || "{}"
+    );
+  };
+
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function (event) {
+    if (event.target == modal) {
+      window.localStorage.setItem("modal", JSON.stringify("none"));
+      modal.style.display = JSON.parse(
+        window.localStorage.getItem("modal") || "{}"
+      );
+    }
+  };
+
+  modal.style.display = JSON.parse(
+    window.localStorage.getItem("modal") || "{}"
+  );
+  // initialising the various components through id selection
+  const fileElem = document.getElementById("fileElem");
+  const fileSelect = document?.getElementById("fileSelect");
+  const instructions = document?.getElementById("instructions");
+
+  // defining functions for the different events
+  const dragenter = (e: any) => {
+    e.stopPropagation();
+    e.preventDefault();
+  };
+  const dragover = (e: any) => {
+    e.stopPropagation();
+    e.preventDefault();
+  };
+  const drop = (e: any) => {
+    e.stopPropagation();
+    e.preventDefault();
+    const dt = e.dataTransfer;
+    const files = [...dt.files];
+    const droppedFile = files[0];
+    const fileName = droppedFile.name;
+    const fileSize = droppedFile.size;
+    const fileLastModified = droppedFile.lastModified;
+    const fileType = droppedFile.type;
+    console.log("dropped file : ", droppedFile as any);
+    window.localStorage.setItem("file", JSON.stringify(droppedFile));
+    window.localStorage.setItem("fileName", JSON.stringify(fileName));
+    window.localStorage.setItem("fileSize", JSON.stringify(fileSize));
+    window.localStorage.setItem(
+      "fileLastModified",
+      JSON.stringify(fileLastModified)
+    );
+    window.localStorage.setItem("fileType", JSON.stringify(fileType));
+    updateFileDetailsContainer();
+  };
+
+  // adding listeners for drag & drop functionality
+  instructions?.addEventListener("dragenter", dragenter, false);
+  instructions?.addEventListener("dragover", dragover, false);
+  instructions?.addEventListener("drop", drop, false);
+
+  // trigger the event for enabling file input
+  fileSelect?.addEventListener(
+    "click",
+    (e) => {
+      if (fileElem) {
+        fileElem.click();
+      }
+    },
+    false
+  );
+
+  // log the file uploaded via "fileElem"
+  if (fileElem) {
+    fileElem.onchange = () => {
+      const files = [...fileElem.files];
+      const selectedFile = files[0];
+      const fileName = selectedFile.name;
+      const fileSize = selectedFile.size;
+      const fileLastModified = selectedFile.lastModified;
+      const fileType = selectedFile.type;
+      console.log("selected file : ", selectedFile as any);
+      window.localStorage.setItem("file", JSON.stringify(selectedFile));
+      window.localStorage.setItem("fileName", JSON.stringify(fileName));
+      window.localStorage.setItem("fileSize", JSON.stringify(fileSize));
+      window.localStorage.setItem(
+        "fileLastModified",
+        JSON.stringify(fileLastModified)
+      );
+      window.localStorage.setItem("fileType", JSON.stringify(fileType));
+      updateFileDetailsContainer();
+      readUploadedFile();
+    };
   }
-}
 
-modal.style.display = JSON.parse(window.localStorage.getItem('modal')|| '{}');;
-	// initialising the various components through id selection
-	// const libName = document?.getElementById("libName");
-	const fileElem = document.getElementById("fileElem");
-	const fileSelect = document?.getElementById("fileSelect");
-	const instructions = document?.getElementById("instructions");
-
-	// defining functions for the different events
-	const dragenter = (e:any) => {
-	e.stopPropagation();
-	e.preventDefault();
-	}
-	const dragover = (e:any) => {
-	e.stopPropagation();
-	e.preventDefault();
-	}
-	const drop = (e:any) => {
-	e.stopPropagation();
-	e.preventDefault();
-	const dt = e.dataTransfer;
-	const files = [...dt.files];
-	const droppedFile = files[0];
-	const fileName = droppedFile.name;
-	const fileSize = droppedFile.size;
-	const fileLastModified = droppedFile.lastModified;
-	const fileType = droppedFile.type;
-	console.log("dropped file : ",droppedFile as any);
-	window.localStorage.setItem('fileName',JSON.stringify(fileName));
-	window.localStorage.setItem('fileSize',JSON.stringify(fileSize));
-	window.localStorage.setItem('fileLastModified',JSON.stringify(fileLastModified));
-	window.localStorage.setItem('fileType',JSON.stringify(fileType));
-	updateFileDetailsContainer();
-	}
-	
-	// adding listeners for drag & drop functionality
-	instructions?.addEventListener("dragenter", dragenter, false);
-	instructions?.addEventListener("dragover", dragover, false);
-	instructions?.addEventListener("drop", drop, false);
-
-	// trigger the event for enabling file input
-	fileSelect?.addEventListener("click", (e) => {
-		if (fileElem) {
-			fileElem.click();
-		}
-	}, false);	
-
-	// log the file uploaded via "fileElem"
-	if(fileElem)
-	{
-	fileElem.onchange = ()=>{
-	const files = [...fileElem.files];
-	const selectedFile = files[0];
-	const fileName = selectedFile.name;
-	const fileSize = selectedFile.size;
-	const fileLastModified = selectedFile.lastModified;
-	const fileType = selectedFile.type;
-	console.log("selected file : ",selectedFile as any);
-	window.localStorage.setItem('fileName',JSON.stringify(fileName));
-	window.localStorage.setItem('fileSize',JSON.stringify(fileSize));
-	window.localStorage.setItem('fileLastModified',JSON.stringify(fileLastModified));
-	window.localStorage.setItem('fileType',JSON.stringify(fileType));
-	updateFileDetailsContainer();
-	readUploadedFile()
-	};
-	}
-
-	const updateFileDetailsContainer = ()=>{
-		const fileName = JSON.parse(window.localStorage.getItem('fileName')|| '{}');
-		const fileSize = JSON.parse(window.localStorage.getItem('fileSize')|| '{}');
-		const fileLastModified = JSON.parse(window.localStorage.getItem('fileLastModified')|| '{}');
-		const fileType = JSON.parse(window.localStorage.getItem('fileType')|| '{}');
-		const innerHTMLContent = `
+  const updateFileDetailsContainer = () => {
+    const fileName = JSON.parse(
+      window.localStorage.getItem("fileName") || "{}"
+    );
+    const fileSize = JSON.parse(
+      window.localStorage.getItem("fileSize") || "{}"
+    );
+    const fileLastModified = JSON.parse(
+      window.localStorage.getItem("fileLastModified") || "{}"
+    );
+    const fileType = JSON.parse(
+      window.localStorage.getItem("fileType") || "{}"
+    );
+    const innerHTMLContent = `
 		<span id="fileDetails">
 		<p id="fileName">***** current file *****</p>
 		<p id="fileName"> <mark style="background:transparent;color:rgb(124, 58, 237);opacity:0.9">name</mark> : <mark style="background:transparent;color:#f1f296;opacity:0.7">${fileName}</mark></p>
-		<p id="fileSize"> <mark style="background:transparent;color:rgb(124, 58, 237);opacity:0.9">size</mark> : <mark style="background:transparent;color:#f1f296;opacity:0.7">${fileSize}</mark></p>
-		<p id="fileLastModified"><mark style="background:transparent;color:rgb(124, 58, 237);opacity:0.9">last Modified</mark> : <mark style="background:transparent;color:#f1f296;opacity:0.7">${fileLastModified}</mark></p>
+		<p id="fileSize"> <mark style="background:transparent;color:rgb(124, 58, 237);opacity:0.9">size</mark> : <mark style="background:transparent;color:#f1f296;opacity:0.7">${fileSize}  KB</mark></p>
+		<p id="fileLastModified"><mark style="background:transparent;color:rgb(124, 58, 237);opacity:0.9">last Modified</mark> : <mark style="background:transparent;color:#f1f296;opacity:0.7">${fileLastModified} epoch</mark></p>
 		<p id="fileType"> <mark style="background:transparent;color:rgb(124, 58, 237);opacity:0.9">type</mark> : <mark style="background:transparent;color:#f1f296;opacity:0.7">${fileType}</mark></p>
 		</span>
 		`;
-		if(filesDetailsContainer)
-		{
-			filesDetailsContainer.innerHTML = innerHTMLContent;
-		}
-	}
+    if (filesDetailsContainer) {
+      filesDetailsContainer.innerHTML = innerHTMLContent;
+    }
+  };
 
-updateFileDetailsContainer();
+  updateFileDetailsContainer();
 
+  const readUploadedFile = () => {
+    if (window.FileReader) {
+      // FileReader are supported.
+      getAsText(fileElem.files[0]);
+    } else {
+      alert("FileReader is not supported in this browser.");
+    }
+  };
 
-const readUploadedFile  = ()=>{
-	if (window.FileReader) {
-    // FileReader are supported.
-    getAsText(fileElem.files[0]);
-  } else {
-    alert('FileReader is not supported in this browser.');
+  function getAsText(fileToRead: any) {
+    var reader = new FileReader();
+    // Handle errors load
+    reader.onload = loadHandler;
+    reader.onerror = errorHandler;
+    // Read file into memory as UTF-8
+    reader.readAsText(fileToRead);
   }
-}
 
-function getAsText(fileToRead : any) {
-  var reader = new FileReader();
-  // Handle errors load
-  reader.onload = loadHandler;
-  reader.onerror = errorHandler;
-  // Read file into memory as UTF-8      
-  reader.readAsText(fileToRead);
-}
-
-function loadHandler(event : any) {
-  var csv = event.target.result;
-  processData(csv);
-}
-
-function processData(csv :any) {
-  var allTextLines = csv.split(/\r\n|\n/);
-  var lines = [];
-  while (allTextLines.length) {
-    lines.push(allTextLines.shift().split(','));
+  function loadHandler(event: any) {
+    var csv = event.target.result;
+    processData(csv);
   }
-  console.log(lines);
-//   drawOutput(lines);
-}
 
-function errorHandler(evt : any) {
-  if (evt.target.error.name == "NotReadableError") {
-    alert("Cannot read file !");
+  function processData(csv: any) {
+    var allTextLines = csv.split(/\r\n|\n/);
+    var lines = [];
+    while (allTextLines.length) {
+      lines.push(allTextLines.shift().split(","));
+    }
+    console.log(lines);
+    //   drawOutput(lines);
   }
-}
 
-const bearerToken = import.meta.env.BEARER_TOKEN;
-console.log("bearerToken : ", bearerToken);
+  function errorHandler(evt: any) {
+    if (evt.target.error.name == "NotReadableError") {
+      alert("Cannot read file !");
+    }
+  }
 
-const headers = {
-  'Accept': 'application/json',
-  'Content-Type': 'application/json',
-  'Authorization': `Bearer ${bearerToken}`
-}
+  updateDashboardBtn.onclick = function(){
+  // updateDashboard();
+  getDashboard();
 
+  }
 </script>
 
 <style>
-	main {
-		padding: 1.5rem;
-	}
+  main {
+    padding: 1.5rem;
+  }
 
-	#fileSelect {
-		border-radius: 0.2rem;
-		height:2rem;
-		width:10rem;
-		background-color: rgb(8, 8, 36);
-		color:white;
-		cursor:pointer;
-		border:none;
-		opacity:0.8;
-		&:active{
-			background-color: none;
-		}
-	}
-	#fileDragAndDrop{
-		border:none;
-		border:3px solid #031a1b;
-		border-radius: 0.2rem;
-		height:4rem;
-		width:10rem;
-		background-color:transparent;
-		color:#925d42;
-		cursor:default;
-		opacity:1;
-		
-		border-image:   linear-gradient(45deg, teal 10%, transparent 10%, transparent 50%,transparent 50%, transparent 90%, teal 90%) 5;
-	}
-	#viewUploadedFile{
-		border:1px solid #e0f3f4;
-		border-radius: 0.2rem;
-		height:2rem;
-		width:10rem;
-		background-color: rgb(181, 240, 192);
-		color:white;
-		cursor:pointer;
-		&:active{
-			background-color: none;
-		}
-	}
-	#uploadedFileDisplayedHere{
-		border:1px solid #e0f3f4;
-		border-radius: 0.2rem;
-		background-color: rgb(181, 240, 192);
-		color:rgb(23, 23, 23);
-		cursor:default;
-		padding:0;
-		display:flex;
-		flex-flow:column nowrap;
-		justify-content: flex-start;
-		align-items: center;
-	}
+  #fileSelect {
+    border-radius: 0.2rem;
+    height: 2rem;
+    width: 10rem;
+    background-color: rgb(8, 8, 36);
+    color: white;
+    cursor: pointer;
+    border: none;
+    opacity: 0.8;
+    &:active {
+      background-color: none;
+    }
+  }
 
-	#libName {
-		background-image: var(--accent-gradient);
-		-webkit-background-clip: text;
-		-webkit-text-fill-color: transparent;
-		background-size: 400%;
-		background-position: 0%;
-		border-radius: 0.3rem;
-		font-size:14px;
-	}
+  #fileSubmit{
+    border: 1px solid rgb(120, 239, 166);
+    border-radius: 0.2rem;
+    height: 2rem;
+    width: 10rem;
+    color:rgb(120, 239, 166);
+    background-color: transparent;
+    cursor: pointer;
+    opacity: 0.6;
+    &:active {
+      background-color: none;
+    }
+  }
 
-	#appName{
-		color:rgb(120, 239, 166);
-		padding:0.2rem;
-		border-radius: 0.3rem;
-		font-size: 19px;
-	}
-	#blackText{
-		font-size:12px;
+  #fileDragAndDrop {
+    border: none;
+    border: 3px solid #031a1b;
+    border-radius: 0.2rem;
+    height: 4rem;
+    width: 10rem;
+    background-color: transparent;
+    color: #925d42;
+    cursor: default;
+    opacity: 1;
 
-		color: #fafae7;
-		opacity:0.7;
-	}
-	#instructions {
-		line-height: 1.6;
-		border: 0.09rem dashed #17355a;
-		background-color: #0f243d;
-		padding: 3rem;
-		border-radius: 0.4rem;
-		width:auto;
-		text-align: center;
-		font-family:var(--font-mono),JetBrains Mono,ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
-		display:block;
-		margin-top:5rem;
-		margin-left:2rem;
-		margin-right:2rem;
-	}
-	#openingStatement{
-		background-color: transparent;
-		padding: 0.4rem;
-		font-family:var(--font-mono),JetBrains Mono,ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
-		
-	}
-	.primaryHalf{
-		display: flex;
-		flex-flow: column nowrap;
-		justify-content: center;
-		align-items: center;
-		gap:2.5rem;
-	}
-	@media only screen and (max-width: 600px) {
+    border-image: linear-gradient(
+        45deg,
+        teal 10%,
+        transparent 10%,
+        transparent 50%,
+        transparent 50%,
+        transparent 90%,
+        teal 90%
+      )
+      5;
+  }
+  #viewUploadedFile {
+    border: 1px solid #e0f3f4;
+    border-radius: 0.2rem;
+    height: 2rem;
+    width: 10rem;
+    background-color: rgb(181, 240, 192);
+    color: white;
+    cursor: pointer;
+    &:active {
+      background-color: none;
+    }
+  }
+  #uploadedFileDisplayedHere {
+    border: 1px solid #e0f3f4;
+    border-radius: 0.2rem;
+    background-color: rgb(181, 240, 192);
+    color: rgb(23, 23, 23);
+    cursor: default;
+    padding: 0;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  #libName {
+    background-image: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 400%;
+    background-position: 0%;
+    border-radius: 0.3rem;
+    font-size: 14px;
+  }
+
+  #appName {
+    color: rgb(120, 239, 166);
+    padding: 0.2rem;
+    border-radius: 0.3rem;
+    font-size: 19px;
+  }
+  #blackText {
+    font-size: 12px;
+
+    color: #fafae7;
+    opacity: 0.7;
+  }
+  #instructions {
+    line-height: 1.6;
+    border: 0.2em dashed #17355a;
+    background-color: #0f243d;
+    padding: 3rem;
+    border-radius: 0.4rem;
+    width: auto;
+    text-align: center;
+    font-family: var(--font-mono), JetBrains Mono, ui-monospace, SFMono-Regular,
+      Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    display: block;
+    margin-top: 5rem;
+    margin-left: 2rem;
+    margin-right: 2rem;
+  }
+  #openingStatement {
+    background-color: transparent;
+    padding: 0.4rem;
+    font-family: var(--font-mono), JetBrains Mono, ui-monospace, SFMono-Regular,
+      Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  }
   .primaryHalf {
-		display:flex;
-		flex-flow:column nowrap;
-		justify-content: space-evenly;
-		width:100%;
-		height:100%;
-		align-items: center;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    gap: 2.5rem;
   }
-}
+  @media only screen and (max-width: 600px) {
+    .primaryHalf {
+      display: flex;
+      flex-flow: column nowrap;
+      justify-content: space-evenly;
+      width: 100%;
+      height: 100%;
+      align-items: center;
+    }
+  }
 
-.secondaryHalf{
-		display: flex;
-		flex-flow: row nowrap;
-		justify-content: center;
-		align-items: center;
-	}
-	@media only screen and (max-width: 600px) {
   .secondaryHalf {
-		display:flex;
-		flex-flow:column nowrap;
-		justify-content: space-evenly;
-		width:100%;
-		align-items: center;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
   }
-}
+  @media only screen and (max-width: 600px) {
+    .secondaryHalf {
+      display: flex;
+      flex-flow: column nowrap;
+      justify-content: space-evenly;
+      width: 100%;
+      align-items: center;
+    }
+  }
 
-/* The Modal (background) */
-.modal {
-  display: none; 
-  flex-flow: row nowrap;
-  justify-content: center;
-  align-items: center;
-  position: fixed; 
-  z-index: 1; 
-  left: 0;
-  top: 0;
-  width: 100%; 
-  height: 100%;
-  overflow: auto; 
-  background-color: rgb(0,0,0); 
-  background-color: rgba(0,0,0,0.4); 
-}
+  /* The Modal (background) */
+  .modal {
+    display: none;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.7);
+  }
 
-/* The Close Button */
-.close {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-  display:none;
-}
+  /* The Close Button */
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    display: none;
+  }
 
-.close:hover,
-.close:focus {
-  color: black;
-  text-decoration: none;
-  cursor: pointer;
-}
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
 
-#myBtn{
-	border-radius: 0.2rem;
-	height:2rem;
-	width:10rem;
-	background-color: rgb(8, 8, 36);
-	color:white;
-	cursor:pointer;
-	border:none;
-	&:active{
-		background-color: none;
-	}
-	
-}
+  #actionbuttons {
+    display: flex;
+    flex-flow: row nowrap;
+    gap: 1rem;
+    margin-top: -60px;
+  }
 
-#uploadedFilesDetailsContainer{
-color:green;
-}
+  #myUploadBtn {
+    border-radius: 0.2rem;
+    height: 2rem;
+    width: 10rem;
+    background-color: rgb(8, 8, 36);
+    color: white;
+    cursor: pointer;
+    border: none;
+    &:active {
+      background-color: none;
+    }
+  }
 
-.filePropId{
-	mark{
-		background-color: none;
-	}
-}
+  #myVisualizeBtn {
+    border-radius: 0.2rem;
+    height: 2rem;
+    width: 10rem;
+    background-color: rgb(8, 8, 36);
+    color: rgb(8, 8, 36);
+    cursor: pointer;
+    border: none;
+    background-image: linear-gradient(45deg, rgb(var(--accent)), #da62c4 70%);
+    &:active {
+      background-color: none;
+    }
+  }
 
-.filePropValue{
-	/* mark{ */
-		color: blue;
-		background-color: red;
-	/* } */
-}
+  #uploadedFilesDetailsContainer {
+    color: green;
+  }
 
-#individualFileName{
-	background:none;
-}
+  .filePropId {
+    mark {
+      background-color: none;
+    }
+  }
+
+  .filePropValue {
+    /* mark{ */
+    color: blue;
+    background-color: red;
+    /* } */
+  }
+
+  #individualFileName {
+    background: none;
+  }
+
+  /* arrow animation */
+  .arrow {
+    /* position: absolute;
+    top: 50%;
+    left: 50%; */
+    transform: translate(-50%, -50%);
+    transform: rotate(270deg);
+    cursor: pointer;
+  }
+
+  .arrow span {
+    display: block;
+    width: 0.5em;
+    height: 0.5em;
+    border-bottom: 2px solid rgba(130, 231, 182, 0.5);
+    border-right: 2px solid rgba(130, 231, 182, 0.5);
+    transform: rotate(45deg);
+    animation: animate 2s infinite;
+  }
+
+  .arrow span:nth-child(2) {
+    animation-delay: -0.2s;
+  }
+
+  .arrow span:nth-child(3) {
+    animation-delay: -0.4s;
+  }
+
+  @keyframes animate {
+    0% {
+      opacity: 0;
+      transform: rotate(45deg) translate(-20px, -20px);
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: rotate(45deg) translate(20px, 20px);
+    }
+  }
 </style>
