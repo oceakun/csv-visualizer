@@ -11,14 +11,26 @@
 	},
 	"dependencies": {
 		"@astrojs/react": "^2.0.2",
+		"@emotion/react": "^11.10.6",
+		"@emotion/styled": "^11.10.6",
 		"@grafana/ui": "^9.3.6",
+		"@material-ui/core": "^4.12.4",
+		"@mui/icons-material": "^5.11.11",
+		"@mui/material": "^5.11.14",
+		"@nanostores/react": "^0.4.1",
 		"@types/react": "^18.0.21",
 		"@types/react-dom": "^18.0.6",
 		"@types/react-modal": "^3.13.1",
-		"astro": "^2.0.14",
+		"astro": "^2.1.3",
 		"axios": "^1.3.4",
+		"firebase": "^9.18.0",
+		"nanostores": "^0.7.4",
 		"react": "^18.0.0",
 		"react-dom": "^18.0.0",
-		"react-modal": "^3.16.1"
+		"react-dropzone": "^14.2.3",
+		"react-modal": "^3.16.1",
+		"react-router-dom": "^6.9.0",
+		"styled-components": "^5.3.9",
+		"uuid": "^9.0.0"
 	}
 }
