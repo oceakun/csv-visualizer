@@ -1,18 +1,64 @@
 ---
-import Layout from "../layouts/Layout.astro";
+import UserStoredFiles from "../components/userSpecificAssets/UserStoredFiles";
+import gitImage from "../assets/git.svg";
+import signinImage from "../assets/signin.svg";
+import arrowRight from "../assets/arrowRight.svg";
+import AuthenticatedUserEmailContainer from "../components/authenticatedUserEmailContainer/AuthenticatedUserEmailContainer";
+import SaveButton from "../components/saveButton/SaveButton";
+import IframeContainer from "../components/iframeContainer/IframeContainer";
+import "../styles/index.css";
+import SignIn from "../components/signIn/SignIn";
+import SignUp from "../components/signUp/SignUp";
 ---
 
-<Layout title="csv-visualizer">
-    <div class="primaryHalf">
-      <span id="openingStatement">
+<div id="csv-visualizer">
+  <div class="primaryHalf">
+    <div class="header">
+      <span id="title">
         <span id="appName">csv-visualizer</span>
-        <span id="blackText"
+        <span id="appNameSubText"
           >| powered by <mark id="libName"> Grafana</mark>
         </span>
+        <span>
+          <AuthenticatedUserEmailContainer client:only />
+        </span>
       </span>
+
+      <span class="headerOptions">
+        <img id="signinImage" src={signinImage} width="20" alt="SignIn" />
+        <a
+          id="gitUrl"
+          style="display:none"
+          target="_blank"
+          href="https://github.com/oceakun/csv-visualizer"></a>
+        <img id="gitImage" src={gitImage} width="20" alt="Git" />
+      </span>
+    </div>
+
+    <div id="actionbuttons">
+      <button id="myUploadBtn"> Upload</button>
+      <img id="arrowRight" src={arrowRight} width="10" alt="Git" />
+      <button id="myVisualizeBtn" disabled> Visualize</button>
+      <SaveButton client:only />
+    </div>
+  </div>
+  <div class="">
+    <UserStoredFiles client:only/>
+  </div>
+  <div
+    class="secondaryHalf"
+    style="padding-bottom:56.25%; position:relative; display:block; width: 100%"
+  >
+    <IframeContainer client:only />
+  </div>
+
+  <div id="uploadModal" class="modal">
+    <div id="uploadFileModalContent">
+      <span style="display:none" class="closeUploadFileSpan">&times;</span><br>
+      <button id="fileSelect">Browse</button>
+      <div id="uploadedFileDetailsContainer"></div>
       <form
-        id="formFile"
-        enctype="multipart/form-data"
+        id="fileForm"
         action="http://localhost:8080/api/upload"
         method="post"
       >
@@ -23,530 +69,407 @@ import Layout from "../layouts/Layout.astro";
           accept=".csv"
           style="display:none"
         />
+        <button type="submit" id="formSubmitButton">Submit</button>
       </form>
-
-      <div id="actionbuttons">
-        <button id="myUploadBtn"> Upload</button>
-        <div class="arrow">
-          <span></span>
-        </div>
-        <button id="myVisualizeBtn"> Visualize</button>
-        <!-- <button id="updateDashboard"> Update Dashboard</button> -->
-      </div>
     </div>
-    <div id="myModal" class="modal">
-      <div id="instructions">
-        <span class="close">&times;</span>
-        <button id="fileSelect">Select a CSV file</button>
-        <div id="uploadedFilesDetailsContainer"></div>
-        <!-- <button id="fileSubmit">Submit</button> -->
-      </div>
+  </div>
+
+  <div id="authModal" class="modal">
+    <div id="authModalContent">
+      <span style="display:none" class="closeAuthSpan">&times;</span>
+      <SignIn client:only />
+      <button id="registerButton">Sign-Up</button>
     </div>
+  </div>
 
-    <div class="secondaryHalf">
-      <iframe
-        src="http://localhost:3000/d-solo/Ubn81xbVk/mpd?orgId=1&from=1677693191808&to=1677714791808&panelId=2"
-        width="700"
-        height="400"
-        frameborder="0"></iframe>
+  <div id="registerModal" class="modal">
+    <div id="registerModalContent">
+      <span style="display:none" class="closeRegisterSpan">&times;</span>
+      <SignUp client:only />
+      <!-- <button id="authButton">Sign-In</button> -->
     </div>
-</Layout>
-<script>
-  import updateDashboard from "../components/updateDashboard";
-  import getDashboard from "../components/getDashboard";
-//  get the form
-  const formFile = document.getElementById("formFile");
+  </div>
 
-  // get the updateDashboardBtn button
-  const updateDashboardBtn = document.getElementById("updateDashboard"); 
+  <script>
+    import axios from "axios";
+    import { auth } from "../firebase";
+    import { onAuthStateChanged } from "firebase/auth";
+    import { currentUserUid, userEmail } from "../store/UserStore";
+    import { userSpecificAssetsDisplayStatus, selectedFileContentDisplayStatus, saveButtonDisplayStatus } from "../store/ComponentsDisplayPropertyStore";
+    import createNewDataSource from "../grafanaAPIRequests/createDataSource";
+    import updateDashboard from "../grafanaAPIRequests/updateGrafanaDashboard";
+    import getDashboard from "../grafanaAPIRequests/getCurrentPanelsArray";
 
-  // get the myVisualizeBtn
-  const myVisualizeBtn = document.getElementById("myVisualizeBtn");
+    // get the signin image
+    const signinImage = document.getElementById("signinImage");
 
-  // get the modal
-  const modal = document.getElementById("myModal");
+    // registerButton
+    const registerButton = document.getElementById("registerButton");
 
-  // get the button that opens the modal
-  const myUploadBtn = document.getElementById("myUploadBtn");
+    // get the git image
+    const gitImage = document.getElementById("gitImage");
 
-  // get the <span> element that closes the modal
-  const span = document.getElementsByClassName("close")[0];
+    // get the git anchor tag via id
+    const gitUrl = document.getElementById("gitUrl");
 
-  // get the container storing uploaded file's details
-  const filesDetailsContainer = document.getElementById(
-    "uploadedFilesDetailsContainer"
-  );
+    //  get the form via id
+    const form = document.querySelector("form");
 
-  // When the user clicks on the button, open the modal
-  myUploadBtn.onclick = function () {
-    window.localStorage.setItem("modal", JSON.stringify("block"));
-    modal.style.display = JSON.parse(
-      window.localStorage.getItem("modal") || "{}"
+    // get the myVisualizeBtn
+    const myVisualizeBtn = document.getElementById("myVisualizeBtn");
+
+    // get the authModal
+    const authModal = document.getElementById("authModal");
+
+    // get the authModal
+    const registerModal = document.getElementById("registerModal");
+
+    // get the file upload modal
+    const fileUploadModal = document.getElementById("uploadModal");
+
+    // get the button that opens the modal
+    const myUploadBtn = document.getElementById("myUploadBtn");
+
+    // get the <span> element that closes the modal
+    const closeUploadFileSpan = document.getElementsByClassName("closeUploadFileSpan")[0];
+    
+    // get the <span> element that closes the modal
+      const closeAuthSpan = document.getElementsByClassName("closeAuthSpan")[0];
+      
+    // get the <span> element that closes the modal
+      const closeRegisterSpan = document.getElementsByClassName("closeRegisterSpan")[0];
+
+    // get the container storing uploaded file's details
+    const uploadedFilesDetails = document.getElementById(
+      "uploadedFileDetailsContainer"
     );
-    modal.style.flexFlow = "row nowrap";
-    modal.style.justifyContent = "center";
-    modal.style.alignItems = "center";
-  };
 
-  // when the user clicks on myVisualizeBtn, start the visualization
-  myVisualizeBtn.onclick = function () {
-    formFile.submit();
-  };
+    const fileElem = document.getElementById("fileElem");
 
-  // When the user clicks on <span> (x), close the modal
-  span.onclick = function () {
-    window.localStorage.setItem("modal", JSON.stringify("none"));
-    modal.style.display = JSON.parse(
-      window.localStorage.getItem("modal") || "{}"
+    const fileSelect = document?.getElementById("fileSelect");
+
+    const uploadFileModalContent = document?.getElementById(
+      "uploadFileModalContent"
     );
-  };
 
-  // When the user clicks anywhere outside of the modal, close it
-  window.onclick = function (event) {
-    if (event.target == modal) {
-      window.localStorage.setItem("modal", JSON.stringify("none"));
-      modal.style.display = JSON.parse(
-        window.localStorage.getItem("modal") || "{}"
-      );
+    // event listener for the form submission
+    if (form) {
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        myVisualizeBtn.disabled = false;
+        const formData = new FormData(form);
+        const url = import.meta.env.PUBLIC_FILE_UPLOAD_URL;
+        axios
+          .post(url, formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
+          .then((res) => {
+            console.log("file upload was successful, response : ", res);
+          })
+          .catch((err) => {
+            console.log("there was an error in file upload : ", err);
+          });
+      });
     }
-  };
 
-  modal.style.display = JSON.parse(
-    window.localStorage.getItem("modal") || "{}"
-  );
-  // initialising the various components through id selection
-  const fileElem = document.getElementById("fileElem");
-  const fileSelect = document?.getElementById("fileSelect");
-  const instructions = document?.getElementById("instructions");
-
-  // defining functions for the different events
-  const dragenter = (e: any) => {
-    e.stopPropagation();
-    e.preventDefault();
-  };
-  const dragover = (e: any) => {
-    e.stopPropagation();
-    e.preventDefault();
-  };
-  const drop = (e: any) => {
-    e.stopPropagation();
-    e.preventDefault();
-    const dt = e.dataTransfer;
-    const files = [...dt.files];
-    const droppedFile = files[0];
-    const fileName = droppedFile.name;
-    const fileSize = droppedFile.size;
-    const fileLastModified = droppedFile.lastModified;
-    const fileType = droppedFile.type;
-    console.log("dropped file : ", droppedFile as any);
-    window.localStorage.setItem("file", JSON.stringify(droppedFile));
-    window.localStorage.setItem("fileName", JSON.stringify(fileName));
-    window.localStorage.setItem("fileSize", JSON.stringify(fileSize));
-    window.localStorage.setItem(
-      "fileLastModified",
-      JSON.stringify(fileLastModified)
-    );
-    window.localStorage.setItem("fileType", JSON.stringify(fileType));
-    updateFileDetailsContainer();
-  };
-
-  // adding listeners for drag & drop functionality
-  instructions?.addEventListener("dragenter", dragenter, false);
-  instructions?.addEventListener("dragover", dragover, false);
-  instructions?.addEventListener("drop", drop, false);
-
-  // trigger the event for enabling file input
-  fileSelect?.addEventListener(
-    "click",
-    (e) => {
-      if (fileElem) {
-        fileElem.click();
+    // update user info when auth state changes
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        currentUserUid.set(user.uid);
+        userEmail.set(user.email);
+        userSpecificAssetsDisplayStatus.set("userSpecificAssetsDisplayed");
+        saveButtonDisplayStatus.set("saveButtonDisplayed");
+        selectedFileContentDisplayStatus.set("selectedFileContentDisplayed");
+        console.log("onAuthStateChanged, user exists: ", user);
+        console.log("currentUserUid.get() : ", currentUserUid.get());
+        console.log("userEmail.get() : ", userEmail.get());
+        console.log(
+          "userSpecificAssetsDisplayStatus.get() : ",
+          userSpecificAssetsDisplayStatus.get()
+        );
+      } else {
+        console.log("onAuthStateChanged, no user signed in ");
+        currentUserUid.set("");
+        userEmail.set("");
+        userSpecificAssetsDisplayStatus.set("userSpecificAssetsNotDisplayed");
+        saveButtonDisplayStatus.set("saveButtonNotDisplayed");
+        selectedFileContentDisplayStatus.set("selectedFileContentNotDisplayed");
       }
-    },
-    false
-  );
+    });
 
-  // log the file uploaded via "fileElem"
-  if (fileElem) {
-    fileElem.onchange = () => {
-      const files = [...fileElem.files];
-      const selectedFile = files[0];
-      const fileName = selectedFile.name;
-      const fileSize = selectedFile.size;
-      const fileLastModified = selectedFile.lastModified;
-      const fileType = selectedFile.type;
-      console.log("selected file : ", selectedFile as any);
-      window.localStorage.setItem("file", JSON.stringify(selectedFile));
-      window.localStorage.setItem("fileName", JSON.stringify(fileName));
-      window.localStorage.setItem("fileSize", JSON.stringify(fileSize));
-      window.localStorage.setItem(
-        "fileLastModified",
-        JSON.stringify(fileLastModified)
-      );
-      window.localStorage.setItem("fileType", JSON.stringify(fileType));
-      updateFileDetailsContainer();
-      readUploadedFile();
+    // 'Visualize' button clicked, call the grafana APIs to create a new panel
+    myVisualizeBtn.addEventListener("click", () => {
+      console.log("visualize button clicked");
+      createNewDataSource();
+      getDashboard();
+      updateDashboard();
+    });
+
+    // git image clicked, click gitUrl anchor tag
+    gitImage.onclick = function () {
+      // navigate to the git repo
+      gitUrl?.click();
     };
-  }
 
-  const updateFileDetailsContainer = () => {
-    const fileName = JSON.parse(
-      window.localStorage.getItem("fileName") || "{}"
+    // 'Upload' button clicked, open the file upload modal
+    myUploadBtn.onclick = function () {
+      window.localStorage.setItem("fileUploadModal", JSON.stringify("block"));
+      fileUploadModal.style.display = JSON.parse(
+        window.localStorage.getItem("fileUploadModal") || "{}"
+      );
+      fileUploadModal.style.flexFlow = "row nowrap";
+      fileUploadModal.style.justifyContent = "center";
+      fileUploadModal.style.alignItems = "center";
+    };
+
+    // When the user clicks on <span> (x), close the fileUploadModal
+      closeUploadFileSpan.onclick = function () {
+      window.localStorage.setItem("fileUploadModal", JSON.stringify("none"));
+      fileUploadModal.style.display = JSON.parse(
+        window.localStorage.getItem("fileUploadModal") || "{}"
+      );
+    };
+
+    // When the user clicks anywhere outside of the fileUploadModal, close it
+    window.onclick = function (event) {
+      if (event.target == fileUploadModal) {
+        window.localStorage.setItem("fileUploadModal", JSON.stringify("none"));
+        fileUploadModal.style.display = JSON.parse(
+          window.localStorage.getItem("fileUploadModal") || "{}"
+        );
+      }
+      if (event.target == authModal) {
+        window.localStorage.setItem("authModal", JSON.stringify("none"));
+        authModal.style.display = JSON.parse(
+          window.localStorage.getItem("authModal") || "{}"
+        );
+      }
+      if (event.target == registerModal) {
+        window.localStorage.setItem("registerModal", JSON.stringify("none"));
+        registerModal.style.display = JSON.parse(
+          window.localStorage.getItem("registerModal") || "{}"
+        );
+      }
+
+
+    };
+
+    fileUploadModal.style.display = JSON.parse(
+      window.localStorage.getItem("fileUploadModal") || "{}"
     );
-    const fileSize = JSON.parse(
-      window.localStorage.getItem("fileSize") || "{}"
+
+
+    // 'signinImage' image clicked, open the authModal
+    signinImage.onclick = function () {
+      window.localStorage.setItem("authModal", JSON.stringify("block"));
+      authModal.style.display = JSON.parse(
+        window.localStorage.getItem("authModal") || "{}"
+      );
+      authModal.style.flexFlow = "row nowrap";
+      authModal.style.justifyContent = "center";
+      authModal.style.alignItems = "center";
+    };
+
+    // When the user clicks on <span> (x), close the authModal
+      closeAuthSpan.onclick = function () {
+      window.localStorage.setItem("authModal", JSON.stringify("none"));
+      authModal.style.display = JSON.parse(
+        window.localStorage.getItem("authModal") || "{}"
+      );
+    };
+
+    authModal.style.display = JSON.parse(
+      window.localStorage.getItem("authModal") || "{}"
     );
-    const fileLastModified = JSON.parse(
-      window.localStorage.getItem("fileLastModified") || "{}"
+
+
+    // 'registerButton' image clicked, open the authModal
+    registerButton.onclick = function () {
+      window.localStorage.setItem("registerModal", JSON.stringify("block"));
+      registerModal.style.display = JSON.parse(
+        window.localStorage.getItem("registerModal") || "{}"
+      );
+      registerModal.style.flexFlow = "row nowrap";
+      registerModal.style.justifyContent = "center";
+      registerModal.style.alignItems = "center";
+    };
+
+    // When the user clicks on <span> (x), close the authModal
+      closeRegisterSpan.onclick = function () {
+      window.localStorage.setItem("registerModal", JSON.stringify("none"));
+      registerModal.style.display = JSON.parse(
+        window.localStorage.getItem("registerModal") || "{}"
+      );
+    };
+
+    registerModal.style.display = JSON.parse(
+      window.localStorage.getItem("registerModal") || "{}"
     );
-    const fileType = JSON.parse(
-      window.localStorage.getItem("fileType") || "{}"
+
+    // function to set uploaded file data
+    // const setUploadedFileData = (name, size, type, uploadedAt, lastModified) => {
+    //   uploadFileData.set({
+    //     fileName: name,
+    //     fileSize: size,
+    //     fileType: type,
+    //     uploadedAt: uploadedAt,
+    //     lastModified: lastModified,
+    //   });
+    // };
+
+    // defining functions for the drag&drop events
+    // const dragenter = (e: any) => {
+    //   e.stopPropagation();
+    //   e.preventDefault();
+    // };
+    // const dragover = (e: any) => {
+    //   e.stopPropagation();
+    //   e.preventDefault();
+    // };
+    // const drop = (e: any) => {
+    //   e.stopPropagation();
+    //   e.preventDefault();
+    //   const dt = e.dataTransfer;
+    //   const uploadedAt = new Date();
+    //   const files = [...dt.files];
+    //   const droppedFile = files[0];
+    //   const fileName = droppedFile.name;
+    //   const fileSize = droppedFile.size;
+    //   const fileLastModified = droppedFile.lastModified;
+    //   const fileType = droppedFile.type;
+    //   console.log("dropped file : ", droppedFile as any);
+    //   window.localStorage.setItem("file", JSON.stringify(droppedFile));
+    //   window.localStorage.setItem("fileName", JSON.stringify(fileName));
+    //   window.localStorage.setItem("fileSize", JSON.stringify(fileSize));
+    //   window.localStorage.setItem(
+    //     "fileLastModified",
+    //     JSON.stringify(fileLastModified)
+    //   );
+    //   window.localStorage.setItem("fileType", JSON.stringify(fileType));
+    //   // setUploadedFileData(
+    //   //   fileName,
+    //   //   fileSize,
+    //   //   fileType,
+    //   //   uploadedAt,
+    //   //   fileLastModified
+    //   // );
+
+    //   updateFileDetailsContainer();
+    //   readUploadedFile();
+    // };
+
+    // // adding listeners for drag & drop functionality
+    // uploadFileModalContent?.addEventListener("dragenter", dragenter, false);
+    // uploadFileModalContent?.addEventListener("dragover", dragover, false);
+    // uploadFileModalContent?.addEventListener("drop", drop, false);
+
+    // trigger the event for enabling file input
+    fileSelect?.addEventListener(
+      "click",
+      (e) => {
+        if (fileElem) {
+          fileElem.click();
+        }
+      },
+      false
     );
-    const innerHTMLContent = `
+
+    // log the file uploaded via "fileElem"
+    if (fileElem) {
+      fileElem.onchange = () => {
+        const uploadedAt = new Date();
+        const files = [...fileElem.files];
+        const selectedFile = files[0];
+        const fileName = selectedFile.name;
+        const fileSize = selectedFile.size;
+        const fileLastModified = selectedFile.lastModified;
+        const fileType = selectedFile.type;
+        console.log("selected file : ", selectedFile as any);
+        window.localStorage.setItem("file", JSON.stringify(selectedFile));
+        window.localStorage.setItem("fileName", JSON.stringify(fileName));
+        window.localStorage.setItem("fileSize", JSON.stringify(fileSize));
+        window.localStorage.setItem(
+          "fileLastModified",
+          JSON.stringify(fileLastModified)
+        );
+        window.localStorage.setItem("fileType", JSON.stringify(fileType));
+        updateFileDetailsContainer();
+        // to print the uploaded file
+        // readUploadedFile();
+      };
+    }
+
+    const updateFileDetailsContainer = () => {
+      const fileName = JSON.parse(
+        window.localStorage.getItem("fileName") || "{}"
+      );
+      const fileSize = JSON.parse(
+        window.localStorage.getItem("fileSize") || "{}"
+      );
+      const fileLastModified = JSON.parse(
+        window.localStorage.getItem("fileLastModified") || "{}"
+      );
+      const fileType = JSON.parse(
+        window.localStorage.getItem("fileType") || "{}"
+      );
+
+      const innerHTMLContent = `
 		<span id="fileDetails">
-		<p id="fileName">***** current file *****</p>
+		<p id="fileName" style="color:rgb(120, 239, 166);">***** uploaded file *****</p>
 		<p id="fileName"> <mark style="background:transparent;color:rgb(124, 58, 237);opacity:0.9">name</mark> : <mark style="background:transparent;color:#f1f296;opacity:0.7">${fileName}</mark></p>
 		<p id="fileSize"> <mark style="background:transparent;color:rgb(124, 58, 237);opacity:0.9">size</mark> : <mark style="background:transparent;color:#f1f296;opacity:0.7">${fileSize}  KB</mark></p>
 		<p id="fileLastModified"><mark style="background:transparent;color:rgb(124, 58, 237);opacity:0.9">last Modified</mark> : <mark style="background:transparent;color:#f1f296;opacity:0.7">${fileLastModified} epoch</mark></p>
 		<p id="fileType"> <mark style="background:transparent;color:rgb(124, 58, 237);opacity:0.9">type</mark> : <mark style="background:transparent;color:#f1f296;opacity:0.7">${fileType}</mark></p>
+    
 		</span>
 		`;
-    if (filesDetailsContainer) {
-      filesDetailsContainer.innerHTML = innerHTMLContent;
-    }
-  };
 
-  updateFileDetailsContainer();
+      if (uploadedFilesDetails) {
+        uploadedFilesDetails.innerHTML = innerHTMLContent;
+      }
+    };
 
-  const readUploadedFile = () => {
-    if (window.FileReader) {
-      // FileReader are supported.
-      getAsText(fileElem.files[0]);
-    } else {
-      alert("FileReader is not supported in this browser.");
-    }
-  };
+    updateFileDetailsContainer();
 
-  function getAsText(fileToRead: any) {
-    var reader = new FileReader();
-    // Handle errors load
-    reader.onload = loadHandler;
-    reader.onerror = errorHandler;
-    // Read file into memory as UTF-8
-    reader.readAsText(fileToRead);
-  }
+    // const readUploadedFile = () => {
+    //   if (window.FileReader) {
+    //     // FileReader are supported.
+    //     getAsText(fileElem.files[0]);
+    //   } else {
+    //     alert("FileReader is not supported in this browser.");
+    //   }
+    // };
 
-  function loadHandler(event: any) {
-    var csv = event.target.result;
-    processData(csv);
-  }
+    // function getAsText(fileToRead: any) {
+    //   var reader = new FileReader();
+    //   // Handle errors load
+    //   reader.onload = loadHandler;
+    //   reader.onerror = errorHandler;
+    //   // Read file into memory as UTF-8
+    //   reader.readAsText(fileToRead);
+    // }
 
-  function processData(csv: any) {
-    var allTextLines = csv.split(/\r\n|\n/);
-    var lines = [];
-    while (allTextLines.length) {
-      lines.push(allTextLines.shift().split(","));
-    }
-    console.log(lines);
-    //   drawOutput(lines);
-  }
+    // function loadHandler(event: any) {
+    //   var csv = event.target.result;
+    //   processData(csv);
+    // }
 
-  function errorHandler(evt: any) {
-    if (evt.target.error.name == "NotReadableError") {
-      alert("Cannot read file !");
-    }
-  }
+    // function processData(csv: any) {
+    //   var allTextLines = csv.split(/\r\n|\n/);
+    //   var lines = [];
+    //   while (allTextLines.length) {
+    //     lines.push(allTextLines.shift().split(","));
+    //   }
+    //   console.log(lines);
+    //   //   drawOutput(lines);
+    // }
 
-  updateDashboardBtn.onclick = function(){
-  // updateDashboard();
-  getDashboard();
-
-  }
-</script>
-
-<style>
-  main {
-    padding: 1.5rem;
-  }
-
-  #fileSelect {
-    border-radius: 0.2rem;
-    height: 2rem;
-    width: 10rem;
-    background-color: rgb(8, 8, 36);
-    color: white;
-    cursor: pointer;
-    border: none;
-    opacity: 0.8;
-    &:active {
-      background-color: none;
-    }
-  }
-
-  #fileSubmit{
-    border: 1px solid rgb(120, 239, 166);
-    border-radius: 0.2rem;
-    height: 2rem;
-    width: 10rem;
-    color:rgb(120, 239, 166);
-    background-color: transparent;
-    cursor: pointer;
-    opacity: 0.6;
-    &:active {
-      background-color: none;
-    }
-  }
-
-  #fileDragAndDrop {
-    border: none;
-    border: 3px solid #031a1b;
-    border-radius: 0.2rem;
-    height: 4rem;
-    width: 10rem;
-    background-color: transparent;
-    color: #925d42;
-    cursor: default;
-    opacity: 1;
-
-    border-image: linear-gradient(
-        45deg,
-        teal 10%,
-        transparent 10%,
-        transparent 50%,
-        transparent 50%,
-        transparent 90%,
-        teal 90%
-      )
-      5;
-  }
-  #viewUploadedFile {
-    border: 1px solid #e0f3f4;
-    border-radius: 0.2rem;
-    height: 2rem;
-    width: 10rem;
-    background-color: rgb(181, 240, 192);
-    color: white;
-    cursor: pointer;
-    &:active {
-      background-color: none;
-    }
-  }
-  #uploadedFileDisplayedHere {
-    border: 1px solid #e0f3f4;
-    border-radius: 0.2rem;
-    background-color: rgb(181, 240, 192);
-    color: rgb(23, 23, 23);
-    cursor: default;
-    padding: 0;
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: flex-start;
-    align-items: center;
-  }
-
-  #libName {
-    background-image: var(--accent-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-size: 400%;
-    background-position: 0%;
-    border-radius: 0.3rem;
-    font-size: 14px;
-  }
-
-  #appName {
-    color: rgb(120, 239, 166);
-    padding: 0.2rem;
-    border-radius: 0.3rem;
-    font-size: 19px;
-  }
-  #blackText {
-    font-size: 12px;
-
-    color: #fafae7;
-    opacity: 0.7;
-  }
-  #instructions {
-    line-height: 1.6;
-    border: 0.2em dashed #17355a;
-    background-color: #0f243d;
-    padding: 3rem;
-    border-radius: 0.4rem;
-    width: auto;
-    text-align: center;
-    font-family: var(--font-mono), JetBrains Mono, ui-monospace, SFMono-Regular,
-      Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-    display: block;
-    margin-top: 5rem;
-    margin-left: 2rem;
-    margin-right: 2rem;
-  }
-  #openingStatement {
-    background-color: transparent;
-    padding: 0.4rem;
-    font-family: var(--font-mono), JetBrains Mono, ui-monospace, SFMono-Regular,
-      Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  }
-  .primaryHalf {
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: center;
-    align-items: center;
-    gap: 2.5rem;
-  }
-  @media only screen and (max-width: 600px) {
-    .primaryHalf {
-      display: flex;
-      flex-flow: column nowrap;
-      justify-content: space-evenly;
-      width: 100%;
-      height: 100%;
-      align-items: center;
-    }
-  }
-
-  .secondaryHalf {
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: center;
-    align-items: center;
-  }
-  @media only screen and (max-width: 600px) {
-    .secondaryHalf {
-      display: flex;
-      flex-flow: column nowrap;
-      justify-content: space-evenly;
-      width: 100%;
-      align-items: center;
-    }
-  }
-
-  /* The Modal (background) */
-  .modal {
-    display: none;
-    flex-flow: row nowrap;
-    justify-content: center;
-    align-items: center;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.7);
-  }
-
-  /* The Close Button */
-  .close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-    display: none;
-  }
-
-  .close:hover,
-  .close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-  }
-
-  #actionbuttons {
-    display: flex;
-    flex-flow: row nowrap;
-    gap: 1rem;
-    margin-top: -60px;
-  }
-
-  #myUploadBtn {
-    border-radius: 0.2rem;
-    height: 2rem;
-    width: 10rem;
-    background-color: rgb(8, 8, 36);
-    color: white;
-    cursor: pointer;
-    border: none;
-    &:active {
-      background-color: none;
-    }
-  }
-
-  #myVisualizeBtn {
-    border-radius: 0.2rem;
-    height: 2rem;
-    width: 10rem;
-    background-color: rgb(8, 8, 36);
-    color: rgb(8, 8, 36);
-    cursor: pointer;
-    border: none;
-    background-image: linear-gradient(45deg, rgb(var(--accent)), #da62c4 70%);
-    &:active {
-      background-color: none;
-    }
-  }
-
-  #uploadedFilesDetailsContainer {
-    color: green;
-  }
-
-  .filePropId {
-    mark {
-      background-color: none;
-    }
-  }
-
-  .filePropValue {
-    /* mark{ */
-    color: blue;
-    background-color: red;
-    /* } */
-  }
-
-  #individualFileName {
-    background: none;
-  }
-
-  /* arrow animation */
-  .arrow {
-    /* position: absolute;
-    top: 50%;
-    left: 50%; */
-    transform: translate(-50%, -50%);
-    transform: rotate(270deg);
-    cursor: pointer;
-  }
-
-  .arrow span {
-    display: block;
-    width: 0.5em;
-    height: 0.5em;
-    border-bottom: 2px solid rgba(130, 231, 182, 0.5);
-    border-right: 2px solid rgba(130, 231, 182, 0.5);
-    transform: rotate(45deg);
-    animation: animate 2s infinite;
-  }
-
-  .arrow span:nth-child(2) {
-    animation-delay: -0.2s;
-  }
-
-  .arrow span:nth-child(3) {
-    animation-delay: -0.4s;
-  }
-
-  @keyframes animate {
-    0% {
-      opacity: 0;
-      transform: rotate(45deg) translate(-20px, -20px);
-    }
-    50% {
-      opacity: 1;
-    }
-    100% {
-      opacity: 0;
-      transform: rotate(45deg) translate(20px, 20px);
-    }
-  }
-</style>
+    // function errorHandler(evt: any) {
+    //   if (evt.target.error.name == "NotReadableError") {
+    //     alert("Cannot read file !");
+    //   }
+    // }
+  </script>
+</div>
