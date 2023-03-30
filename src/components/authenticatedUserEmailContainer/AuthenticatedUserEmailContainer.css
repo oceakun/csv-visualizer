@@ -1,0 +1,32 @@
+#greetUser {
+  font-size: 12px;
+  color: #fafae7;
+  opacity: 0.7;
+}
+
+#greetUser mark {
+  border-radius: 5px;
+  color: rgb(173, 173, 247);
+  background: transparent;
+  border: 1px solid blue;
+  border: none;
+  opacity: 1;
+}
+
+button {
+  border-radius: 5px;
+  color: rgb(173, 173, 247);
+  background: #091625;
+  border: 1px solid blue;
+  opacity: 1;
+  padding: 0 0.2rem 0.2rem 0.2rem;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.7;
+}
+
+button:active {
+  opacity: 0.7;
+}

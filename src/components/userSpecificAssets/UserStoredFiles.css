@@ -1,0 +1,93 @@
+.userSpecificAssetsDisplayed {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.userSpecificAssetsNotDisplayed {
+  display: none;
+}
+
+#greetUser {
+  color:white;
+}
+
+#greetUser mark{
+  border:1px solid blue;
+  border-radius:5px;
+  color:blue;
+  padding:1px;
+  background: transparent; 
+}
+
+.tableAndFileExplorer{
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content:space-between;
+  align-items: center;
+  /* gap:5rem; */
+}
+
+.styled-table {
+  border-collapse: collapse;
+  margin: 25px 0;
+  font-size: 0.9em;
+  font-family: sans-serif;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.styled-table thead tr {
+  background-color: rgb(31, 31, 32);
+  color: #959557;
+  text-align: left;
+  border: 1px solid rgb(0, 0, 0);
+}
+
+.styled-table tbody tr {
+  color: white;
+  background-color: rgb(0, 0, 0);
+  border-bottom: 1px solid rgb(37, 37, 40);
+  text-align: left;
+}
+
+.styled-table tbody tr:hover {
+  background-color: rgb(13, 13, 13);
+  color: #959557;
+  cursor: pointer;
+}
+
+.styled-table th {
+  border: 1px solid rgb(37, 37, 40);
+  border-bottom: 1px solid rgb(101, 101, 101);
+  color: rgb(67, 220, 131);
+  font-weight: lighter;
+  padding: 12px 15px;
+  opacity: 0.7;
+}
+
+.styled-table td {
+  padding: 12px 15px;
+  /* border-right: 1px solid rgb(37, 37, 40);
+  border-left: 1px solid rgb(37, 37, 40); */
+  opacity: 0.7;
+}
+/* 
+.styled-table tbody tr:nth-of-type(even) {
+  background-color: rgb(21, 21, 71);
+} */
+
+.selectedFileActionOptions img {
+  padding: 0 0 0 0.8rem;
+  /* display: flex; */
+  /* flex-flow:row; */
+  /* gap:0.1rem; */
+
+  opacity: 0.7;
+
+}
+
+.selectedFileActionOptions img:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}

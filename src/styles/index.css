@@ -1,0 +1,386 @@
+:root {
+  --accent: 124, 58, 237;
+  --accent-gradient: linear-gradient(
+    45deg,
+    rgb(var(--accent)),
+    #da62c4 30%,
+    white 60%
+  );
+  --accent-primary: 124, 58, 237;
+  --accent-secondary: 161, 255, 236;
+  --accent-gradient-primary: linear-gradient(
+    45deg,
+    rgb(var(--accent-primary)),
+    #da62c4 30%,
+    white 60%
+  );
+  --accent-gradient-secondary: linear-gradient(
+    15deg,
+    rgb(var(--accent-secondary)),
+    #68e835 30%,
+    white 40%
+  );
+  --font-mono: "__JetBrains_Mono_5cc6d4", "__JetBrains_Mono_Fallback_5cc6d4";
+}
+
+html {
+  font-family: system-ui, sans-serif;
+  background-color: #0f243d;
+}
+code {
+  font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
+    Bitstream Vera Sans Mono, Courier New, monospace;
+}
+
+main {
+  padding: 1.5rem;
+}
+
+#csv-visualizer {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-evenly;
+  gap: 1rem;
+}
+
+#fileSelect {
+  border-radius: 0.2rem;
+  height: 2rem;
+  width: 10rem;
+  background-color: rgb(8, 8, 36);
+  color: white;
+  cursor: pointer;
+  border: none;
+  opacity: 0.8;
+  /* &:active {
+      background-color: none;
+    } */
+}
+
+#fileSubmit {
+  border: 1px solid rgb(120, 239, 166);
+  border-radius: 0.2rem;
+  height: 2rem;
+  width: 10rem;
+  color: rgb(120, 239, 166);
+  background-color: transparent;
+  cursor: pointer;
+  opacity: 0.6;
+  /* &:active {
+      background-color: none;
+    } */
+}
+
+#shareFile {
+  border-radius: 0.2rem;
+  height: 2rem;
+  width: 10rem;
+  background-color: rgb(8, 8, 36);
+  color: white;
+  cursor: pointer;
+  border: none;
+  opacity: 0.8;
+  /* &:active {
+      background-color: none;
+    } */
+}
+
+#deleteFile {
+  border: 1px solid rgb(239, 120, 120);
+  border-radius: 0.2rem;
+  height: 2rem;
+  width: 10rem;
+  color: rgb(239, 120, 120);
+  background-color: transparent;
+  cursor: pointer;
+  opacity: 0.6;
+  /* &:active {
+      background-color: none;
+    } */
+}
+
+#fileDragAndDrop {
+  border: none;
+  border: 3px solid #031a1b;
+  border-radius: 0.2rem;
+  height: 4rem;
+  width: 10rem;
+  background-color: transparent;
+  color: #925d42;
+  cursor: default;
+  opacity: 1;
+
+  border-image: linear-gradient(
+      45deg,
+      teal 10%,
+      transparent 10%,
+      transparent 50%,
+      transparent 50%,
+      transparent 90%,
+      teal 90%
+    )
+    5;
+}
+#viewUploadedFile {
+  border: 1px solid #e0f3f4;
+  border-radius: 0.2rem;
+  height: 2rem;
+  width: 10rem;
+  background-color: rgb(181, 240, 192);
+  color: white;
+  cursor: pointer;
+  /* &:active {
+      background-color: none;
+    } */
+}
+#uploadedFileDisplayedHere {
+  border: 1px solid #e0f3f4;
+  border-radius: 0.2rem;
+  background-color: rgb(181, 240, 192);
+  color: rgb(23, 23, 23);
+  cursor: default;
+  padding: 0;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+#libName {
+  background-image: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 400%;
+  background-position: 0%;
+  border-radius: 0.3rem;
+  font-size: 14px;
+}
+
+#appName {
+  color: rgb(120, 239, 166);
+  padding: 0.2rem;
+  border-radius: 0.3rem;
+  font-size: 19px;
+}
+#appNameSubText {
+  font-size: 12px;
+
+  color: #fafae7;
+  opacity: 0.7;
+}
+
+#uploadFileModalContent {
+  line-height: 1.6;
+  border: 0.2em dashed #17355a;
+  background-color: #0f243d;
+  padding: 3rem;
+  border-radius: 0.4rem;
+  width: auto;
+  text-align: center;
+  font-family: var(--font-mono), JetBrains Mono, ui-monospace, SFMono-Regular,
+    Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  display: block;
+  margin-top: 5rem;
+  margin-left: 2rem;
+  margin-right: 2rem;
+}
+
+#authModalContent{
+  line-height: 1.6;
+  border: none;
+  background-color: #0f243d;
+  padding: 3rem;
+  border-radius: 0.4rem;
+  width: auto;
+  text-align: center;
+  font-family: var(--font-mono), JetBrains Mono, ui-monospace, SFMono-Regular,
+    Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  display: block;
+  margin-top: 5rem;
+  margin-left: 2rem;
+  margin-right: 2rem;
+}
+
+#registerModalContent{
+  
+  line-height: 1.6;
+  border: none;
+  background-color: #0f243d;
+  padding: 3rem;
+  border-radius: 0.4rem;
+  width: auto;
+  text-align: center;
+  font-family: var(--font-mono), JetBrains Mono, ui-monospace, SFMono-Regular,
+    Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  display: block;
+  margin-top: 5rem;
+  margin-left: 2rem;
+  margin-right: 2rem;
+}
+
+.header {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+}
+
+#title {
+  background-color: transparent;
+  padding: 0.4rem;
+  font-family: var(--font-mono), JetBrains Mono, ui-monospace, SFMono-Regular,
+    Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+.headerOptions {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
+  /* background-color: #091625; */
+  padding: 0.5rem 1.5rem 0.5rem 1.5rem;
+}
+
+.headerOptions img {
+  color: white;
+  border: 1px solid transparent;
+  border-radius: 35%;
+  padding: 0.5rem;
+  opacity: 0.7;
+  background-color: #091625;
+}
+
+.headerOptions img:hover {
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+.primaryHalf {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  gap: 2.5rem;
+}
+@media only screen and (max-width: 600px) {
+  .primaryHalf {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-evenly;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+  }
+}
+
+#secondaryHalf {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+}
+@media only screen and (max-width: 600px) {
+  #secondaryHalf {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-evenly;
+    width: 100%;
+    align-items: center;
+  }
+}
+/* The Modal (background) */
+.modal {
+  display: none;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* The Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  display: none;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+#actionbuttons {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 1rem;
+  margin-top: -30px;
+}
+
+#myUploadBtn {
+  border-radius: 0.2rem;
+  height: 2rem;
+  width: 10rem;
+  background-color: rgb(8, 8, 36);
+  color: #959557;
+  cursor: pointer;
+  border: none;
+  /* &:active {
+      background-color: none;
+    } */
+}
+
+#myVisualizeBtn {
+  border-radius: 0.2rem;
+  height: 2rem;
+  width: 10rem;
+  background-color: rgb(8, 8, 36);
+  color: rgb(8, 8, 36);
+  cursor: pointer;
+  border: none;
+  background-image: linear-gradient(45deg, rgb(var(--accent)), #da62c4 70%);
+  /* &:active {
+      background-color: none;
+    } */
+}
+
+#uploadedFilesDetailsContainer {
+  color: green;
+}
+
+.filePropId mark {
+  background-color: none;
+}
+
+.filePropValue {
+  /* mark{ */
+  color: blue;
+  background-color: red;
+  /* } */
+}
+
+#individualFileName {
+  background: none;
+}
+
+#formSubmitButton {
+  border: 1px solid rgb(120, 239, 166);
+  border-radius: 0.2rem;
+  height: 2rem;
+  width: 10rem;
+  color: rgb(120, 239, 166);
+  background-color: transparent;
+  cursor: pointer;
+  opacity: 0.6;
+}

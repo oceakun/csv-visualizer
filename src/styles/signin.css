@@ -1,0 +1,46 @@
+:root {
+  --accent: 124, 58, 237;
+  --accent-gradient: linear-gradient(
+    45deg,
+    rgb(var(--accent)),
+    #da62c4 30%,
+    white 60%
+  );
+  --accent-primary: 124, 58, 237;
+  --accent-secondary: 161, 255, 236;
+  --accent-gradient-primary: linear-gradient(
+    45deg,
+    rgb(var(--accent-primary)),
+    #da62c4 30%,
+    white 60%
+  );
+  --accent-gradient-secondary: linear-gradient(
+    15deg,
+    rgb(var(--accent-secondary)),
+    #68e835 30%,
+    white 40%
+  );
+  --font-mono: "__JetBrains_Mono_5cc6d4", "__JetBrains_Mono_Fallback_5cc6d4";
+}
+
+html {
+  font-family: system-ui, sans-serif;
+  background-color: #010913;
+  font-size: 15px;
+
+}
+code {
+  font-family: Menlo, Monaco, Lucida Console, Liberation Mono,
+    DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
+}
+
+main {
+  padding: 1.5rem;
+}
+
+.componentContainer {
+  font-family: system-ui, sans-serif;
+  width:auto;
+  height:auto;
+  background-color: #0f243d;
+}
