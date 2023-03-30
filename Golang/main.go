@@ -5,6 +5,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"github.com/spf13/viper"
+
 	"fmt"
 
 	"github.com/oceakun/csv-visualizer/Golang/pkg/utilities"
@@ -12,15 +14,32 @@ import (
 	"sync"
 )
 
+func CORSMiddleware() gin.HandlerFunc {
+    return func(c *gin.Context) {
+
+        c.Header("Access-Control-Allow-Origin", "*")
+        c.Header("Access-Control-Allow-Credentials", "true")
+        c.Header("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
+        c.Header("Access-Control-Allow-Methods", "POST,HEAD,PATCH, OPTIONS, GET, PUT")
+
+        if c.Request.Method == "OPTIONS" {
+            c.AbortWithStatus(204)
+            return
+        }
+
+        c.Next()
+    }
+}
+
 func main(){
 
-	 // initialize a reverse proxy and pass the actual backend server url here
-	//  proxy, err := utilities.NewProxy("http://localhost:8000")
-	//  if err != nil {
-	// 	 panic(err)
-	//  }
-
 	router := gin.Default()
+	router.Use(CORSMiddleware())
+
+    viper.SetConfigFile(".env")
+    viper.ReadInConfig()
+	fileUploadPort := ":" + viper.Get("FILE_UPLOAD_PORT").(string)
+	staticServerPort := ":" + viper.Get("STATIC_SERVER_PORT").(string)
 
 	var waitGroup sync.WaitGroup
 
@@ -29,37 +48,24 @@ func main(){
 		defer waitGroup.Done()
 		// setting up the router for file POST request
 		router.POST("/api/upload", utilities.UploadFile)
-		if err:= http.ListenAndServe(":8080", router); err!= nil {
+		if err:= http.ListenAndServe(fileUploadPort, router); err!= nil {
 			panic(err)	
 		}
 	}()
 
-	// waitGroup.Add(1)
-	// go func() {
-	// 	defer waitGroup.Done()
-
-	// 	// start reverse-proxy server
-	// 	http.HandleFunc("/reverse-proxy", utilities.HandleRequestAndRedirect)
-	// 	if err := http.ListenAndServe(":1330", nil); err != nil {
-	// 		panic(err)
-	// 	}
-	// }()
-
 	waitGroup.Add(1)
 	go func() {
 		defer waitGroup.Done()
-
 		// serving static files
 		myDir := http.Dir("./static")
 		fmt.Printf("myDir type: %T",myDir);
 		myHandler := http.FileServer(myDir)
 		http.Handle("/", myHandler)
-		if err:= http.ListenAndServe(":8081", nil); err != nil {
+		if err:= http.ListenAndServe(staticServerPort, nil); err != nil {
 			panic(err)
 		}
 	}()
 
-	
 	waitGroup.Wait()
 	
 	}

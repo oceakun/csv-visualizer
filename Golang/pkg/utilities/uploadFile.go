@@ -2,7 +2,7 @@ package utilities
 
 import (
 	"github.com/gin-gonic/gin"
-	
+
 	"net/http"
 
 	"os"
@@ -11,14 +11,14 @@ import (
 )
 
 func UploadFile(c *gin.Context){
-	// Get the file from the request
+	// extract the file from the request
 	file, err := c.FormFile("file")
 	if err != nil {
 		c.String(http.StatusBadRequest, "Bad request")
 		return
 	}
 
-	// open the file of type  
+	// open the extracted file 
 	inputFile, err := file.Open()
 	if err != nil {
 		c.String(http.StatusBadRequest, "Bad request")
@@ -26,7 +26,7 @@ func UploadFile(c *gin.Context){
 	}
 
 	// Create the file on disk
-	filepath := "D:/Personal Projects/Golang/static/visualizationData.csv"
+	filepath := "D:/osc/ccextractor-take-home-assignment/Golang/static/" + file.Filename
 	dst, err := os.Create(filepath)
 	if err != nil {
 		c.String(http.StatusInternalServerError, "Error creating file")
@@ -42,5 +42,5 @@ func UploadFile(c *gin.Context){
 	}
 
 	// Return a success message
-	c.String(http.StatusOK, "File %s uploaded successfully", file.Filename)
+	c.JSON(http.StatusOK, gin.H{"message":"File " + file.Filename + " uploaded successfully"})
 }
