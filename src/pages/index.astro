@@ -43,7 +43,7 @@ import SignUp from "../components/signUp/SignUp";
     </div>
   </div>
   <div class="">
-    <UserStoredFiles client:only/>
+    <UserStoredFiles client:only />
   </div>
   <div
     class="secondaryHalf"
@@ -54,7 +54,8 @@ import SignUp from "../components/signUp/SignUp";
 
   <div id="uploadModal" class="modal">
     <div id="uploadFileModalContent">
-      <span style="display:none" class="closeUploadFileSpan">&times;</span><br>
+      <span style="display:none" class="closeUploadFileSpan">&times;</span><br
+      />
       <button id="fileSelect">Browse</button>
       <div id="uploadedFileDetailsContainer"></div>
       <form
@@ -95,10 +96,15 @@ import SignUp from "../components/signUp/SignUp";
     import { auth } from "../firebase";
     import { onAuthStateChanged } from "firebase/auth";
     import { currentUserUid, userEmail } from "../store/UserStore";
-    import { userSpecificAssetsDisplayStatus, selectedFileContentDisplayStatus, saveButtonDisplayStatus } from "../store/ComponentsDisplayPropertyStore";
-    import createNewDataSource from "../grafanaAPIRequests/createDataSource";
-    import updateDashboard from "../grafanaAPIRequests/updateGrafanaDashboard";
-    import getDashboard from "../grafanaAPIRequests/getCurrentPanelsArray";
+    import {
+      userSpecificAssetsDisplayStatus,
+      selectedFileContentDisplayStatus,
+      saveButtonDisplayStatus,
+    } from "../store/ComponentsDisplayPropertyStore";
+    import {newPanelID} from "../store/GrafanaDashboardStore";
+    import createNewDataSource from "../grafanaAPICalls/createDataSource";
+    import updateDashboard from "../grafanaAPICalls/updateGrafanaDashboard";
+    import getDashboard from "../grafanaAPICalls/getCurrentPanelsArray";
 
     // get the signin image
     const signinImage = document.getElementById("signinImage");
@@ -131,13 +137,16 @@ import SignUp from "../components/signUp/SignUp";
     const myUploadBtn = document.getElementById("myUploadBtn");
 
     // get the <span> element that closes the modal
-    const closeUploadFileSpan = document.getElementsByClassName("closeUploadFileSpan")[0];
-    
+    const closeUploadFileSpan = document.getElementsByClassName(
+      "closeUploadFileSpan"
+    )[0];
+
     // get the <span> element that closes the modal
-      const closeAuthSpan = document.getElementsByClassName("closeAuthSpan")[0];
-      
+    const closeAuthSpan = document.getElementsByClassName("closeAuthSpan")[0];
+
     // get the <span> element that closes the modal
-      const closeRegisterSpan = document.getElementsByClassName("closeRegisterSpan")[0];
+    const closeRegisterSpan =
+      document.getElementsByClassName("closeRegisterSpan")[0];
 
     // get the container storing uploaded file's details
     const uploadedFilesDetails = document.getElementById(
@@ -202,9 +211,16 @@ import SignUp from "../components/signUp/SignUp";
     // 'Visualize' button clicked, call the grafana APIs to create a new panel
     myVisualizeBtn.addEventListener("click", () => {
       console.log("visualize button clicked");
-      createNewDataSource();
-      getDashboard();
-      updateDashboard();
+      async function runRequests() {
+        try {
+          await createNewDataSource();
+          await getDashboard();
+          await updateDashboard();
+        } catch (error) {
+          console.error(error);
+        }
+      }
+      runRequests();
     });
 
     // git image clicked, click gitUrl anchor tag
@@ -225,7 +241,7 @@ import SignUp from "../components/signUp/SignUp";
     };
 
     // When the user clicks on <span> (x), close the fileUploadModal
-      closeUploadFileSpan.onclick = function () {
+    closeUploadFileSpan.onclick = function () {
       window.localStorage.setItem("fileUploadModal", JSON.stringify("none"));
       fileUploadModal.style.display = JSON.parse(
         window.localStorage.getItem("fileUploadModal") || "{}"
@@ -252,14 +268,11 @@ import SignUp from "../components/signUp/SignUp";
           window.localStorage.getItem("registerModal") || "{}"
         );
       }
-
-
     };
 
     fileUploadModal.style.display = JSON.parse(
       window.localStorage.getItem("fileUploadModal") || "{}"
     );
-
 
     // 'signinImage' image clicked, open the authModal
     signinImage.onclick = function () {
@@ -273,7 +286,7 @@ import SignUp from "../components/signUp/SignUp";
     };
 
     // When the user clicks on <span> (x), close the authModal
-      closeAuthSpan.onclick = function () {
+    closeAuthSpan.onclick = function () {
       window.localStorage.setItem("authModal", JSON.stringify("none"));
       authModal.style.display = JSON.parse(
         window.localStorage.getItem("authModal") || "{}"
@@ -283,7 +296,6 @@ import SignUp from "../components/signUp/SignUp";
     authModal.style.display = JSON.parse(
       window.localStorage.getItem("authModal") || "{}"
     );
-
 
     // 'registerButton' image clicked, open the authModal
     registerButton.onclick = function () {
@@ -297,7 +309,7 @@ import SignUp from "../components/signUp/SignUp";
     };
 
     // When the user clicks on <span> (x), close the authModal
-      closeRegisterSpan.onclick = function () {
+    closeRegisterSpan.onclick = function () {
       window.localStorage.setItem("registerModal", JSON.stringify("none"));
       registerModal.style.display = JSON.parse(
         window.localStorage.getItem("registerModal") || "{}"
@@ -433,43 +445,5 @@ import SignUp from "../components/signUp/SignUp";
 
     updateFileDetailsContainer();
 
-    // const readUploadedFile = () => {
-    //   if (window.FileReader) {
-    //     // FileReader are supported.
-    //     getAsText(fileElem.files[0]);
-    //   } else {
-    //     alert("FileReader is not supported in this browser.");
-    //   }
-    // };
-
-    // function getAsText(fileToRead: any) {
-    //   var reader = new FileReader();
-    //   // Handle errors load
-    //   reader.onload = loadHandler;
-    //   reader.onerror = errorHandler;
-    //   // Read file into memory as UTF-8
-    //   reader.readAsText(fileToRead);
-    // }
-
-    // function loadHandler(event: any) {
-    //   var csv = event.target.result;
-    //   processData(csv);
-    // }
-
-    // function processData(csv: any) {
-    //   var allTextLines = csv.split(/\r\n|\n/);
-    //   var lines = [];
-    //   while (allTextLines.length) {
-    //     lines.push(allTextLines.shift().split(","));
-    //   }
-    //   console.log(lines);
-    //   //   drawOutput(lines);
-    // }
-
-    // function errorHandler(evt: any) {
-    //   if (evt.target.error.name == "NotReadableError") {
-    //     alert("Cannot read file !");
-    //   }
-    // }
   </script>
 </div>
