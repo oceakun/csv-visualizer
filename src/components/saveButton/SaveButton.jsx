@@ -1,30 +1,37 @@
 import React from "react";
 import "./SaveButton.css";
 import { useStore } from "@nanostores/react";
-import { saveFileData, newFileSaved } from "../../store/SavedFileStore";
+import { newFileSaved } from "../../store/SavedFileStore";
 import { newPanelID } from "../../store/GrafanaDashboardStore";
 import { currentUserUid } from "../../store/UserStore";
 import { db } from "../../firebase";
 import {
   collection,
-  getDocs,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  doc,
+  addDoc
 } from "firebase/firestore";
 import arrowRight from "../../assets/arrowRight.svg";
 
 import { saveButtonDisplayStatus } from "../../store/ComponentsDisplayPropertyStore";
 
 export default function SaveButton() {
-  const saveButtonId = useStore(
-    saveButtonDisplayStatus
-  );
+  const saveButtonId = useStore(saveButtonDisplayStatus);
   const $newPanelID = useStore(newPanelID);
   const panelBaseurl = import.meta.env.PUBLIC_SOLO_PANEL_URL;
-  const $saveFileData = useStore(saveFileData);
   const $currentUserUid = useStore(currentUserUid);
+  const monthsArray = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "July",
+    "Aug",
+    "Sept",
+    "Oct",
+    "Nov",
+    "Dev",
+  ];
 
   const saveUploadedFileDataToFirestore = () => {
     const $savedAt = new Date();
@@ -38,26 +45,28 @@ export default function SaveButton() {
       window.localStorage.getItem("fileType") || "{}"
     );
 
-    saveFileData.set({
+    const fileDataToBeSaved = {
       fileName: $fileName,
       fileSize: $fileSize,
       fileType: $fileType,
-      savedAt: $savedAt,
-      panelLink: panelBaseurl+$newPanelID,
-    });
+      savedAt: `${
+        monthsArray[$savedAt.getMonth()]
+      },${$savedAt.getDay()},${$savedAt.getYear()} at ${$savedAt.getHours()}:${$savedAt.getMinutes()}:${$savedAt.getSeconds()} `,
+      panelLink: panelBaseurl + $newPanelID,
+    };
 
     if ($currentUserUid) {
       const userCollectionRef = collection(db, $currentUserUid);
       console.log("userCollectionRef : ", userCollectionRef);
       const addFileDocToUserCollection = async (userCollectionRef) => {
         try {
-          const docRef = await addDoc(userCollectionRef, $saveFileData);
+          const docRef = await addDoc(userCollectionRef, fileDataToBeSaved);
           console.log("Document written with ID: ", docRef.id);
         } catch (e) {
           console.error("Error adding document: ", e);
         }
       };
-  
+
       addFileDocToUserCollection(userCollectionRef);
       newFileSaved.set(true);
     }
@@ -66,17 +75,8 @@ export default function SaveButton() {
   return (
     <span id={saveButtonId}>
       {" "}
-      <img
-        id="arrowRight"
-        // style={{ rotate: "-10deg" }}
-        src={arrowRight}
-        width="10"
-        alt="arrowRight"
-      />
-      <button
-        id="saveBtn"
-        onClick={saveUploadedFileDataToFirestore}
-      >
+      <img id="arrowRight" src={arrowRight} width="10" alt="arrowRight" />
+      <button id="saveBtn" onClick={saveUploadedFileDataToFirestore}>
         {" "}
         Save
       </button>
