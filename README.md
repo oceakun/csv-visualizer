@@ -1,5 +1,5 @@
 # csv-visualizer
-csv-visualizer, a simple full-stack app that accepts csv exports and renders beautiful visualizations through Grafana
+csv-visualizer, a simple full-stack web app that accepts csv exports and renders beautiful visualizations through Grafana
 
 ## stack
 - Frontend - Astro 
