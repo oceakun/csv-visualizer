@@ -10,21 +10,21 @@
 }
 
 #greetUser {
-  color:white;
+  color: white;
 }
 
-#greetUser mark{
-  border:1px solid blue;
-  border-radius:5px;
-  color:blue;
-  padding:1px;
-  background: transparent; 
+#greetUser mark {
+  border: 1px solid blue;
+  border-radius: 5px;
+  color: blue;
+  padding: 1px;
+  background: transparent;
 }
 
-.tableAndFileExplorer{
+.tableAndFileExplorer {
   display: flex;
   flex-flow: column nowrap;
-  justify-content:space-between;
+  justify-content: space-between;
   align-items: center;
   /* gap:5rem; */
 }
@@ -68,23 +68,21 @@
 
 .styled-table td {
   padding: 12px 15px;
-  /* border-right: 1px solid rgb(37, 37, 40);
-  border-left: 1px solid rgb(37, 37, 40); */
   opacity: 0.7;
 }
-/* 
-.styled-table tbody tr:nth-of-type(even) {
-  background-color: rgb(21, 21, 71);
-} */
+
+#deleteDoc{
+  /* border: 1px solid #e62747; */
+  opacity:0.3;
+}
+
+#deleteDoc:hover{
+  opacity:0.8;
+}
 
 .selectedFileActionOptions img {
   padding: 0 0 0 0.8rem;
-  /* display: flex; */
-  /* flex-flow:row; */
-  /* gap:0.1rem; */
-
   opacity: 0.7;
-
 }
 
 .selectedFileActionOptions img:hover {
