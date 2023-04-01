@@ -51,5 +51,5 @@ csv-visualizer, a simple full-stack app that accepts csv exports and renders bea
 - (I have used an nginx proxy to get around the CORS error faced while making calls directly to the grafana server)
 - user clicks on 'Save' 
   > documents are fetched from firestore and the container is populated
-- user clicks on '[DeleteTrashGIF](https://user-images.githubusercontent.com/83641627/229306081-d90be846-5093-435f-8f95-375129cadfe6.gif)'
+- user clicks on trash can
   > document is deleted from the firestore collection specific to the user
