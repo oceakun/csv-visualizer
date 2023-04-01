@@ -8,7 +8,7 @@ csv-visualizer, a simple full-stack web app that accepts csv exports and renders
 - Visualization tool - Grafana (Open Source version)
 - Containerization - Docker
 
-## How to use it ?
+## How to use it ? (to be replaced with a user flow diagram soon enough 😌)
 
 ### visualize a csv file
 ![image](https://user-images.githubusercontent.com/83641627/229304559-c613d4c9-f3ba-417d-9482-c67d9894ead3.png)
@@ -40,7 +40,7 @@ csv-visualizer, a simple full-stack web app that accepts csv exports and renders
 - to delete a link, click on the trash can 
 ![image](https://user-images.githubusercontent.com/83641627/229306634-41ab4716-278a-4fb5-b017-55228c5b0645.png)
 
-## how visualization works (to be replaced with a user flow diagram soon enough 😌)
+## how visualization works 
 - user selectes a file and clicks on 'submit' 
   > CSV file is uploaded to the backend server via a rest API\
   > the server, satically hosts this file
