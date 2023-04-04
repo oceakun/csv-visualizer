@@ -3,8 +3,10 @@ import UserStoredFiles from "../components/userSpecificAssets/UserStoredFiles";
 import gitImage from "../assets/git.svg";
 import signinImage from "../assets/signin.svg";
 import arrowRight from "../assets/arrowRight.svg";
+import infoImage from "../assets/info.svg";
 import AuthenticatedUserEmailContainer from "../components/authenticatedUserEmailContainer/AuthenticatedUserEmailContainer";
 import SaveButton from "../components/saveButton/SaveButton";
+import CloneButton from "../components/cloneButton/CloneButton";
 import IframeContainer from "../components/iframeContainer/IframeContainer";
 import "../styles/index.css";
 import SignIn from "../components/signIn/SignIn";
@@ -32,6 +34,8 @@ import SignUp from "../components/signUp/SignUp";
           target="_blank"
           href="https://github.com/oceakun/csv-visualizer"></a>
         <img id="gitImage" src={gitImage} width="20" alt="Git" />
+        <CloneButton/>
+        <img id="infoImage" src={infoImage} width="20" alt="Info" />
       </span>
     </div>
 
@@ -101,10 +105,15 @@ import SignUp from "../components/signUp/SignUp";
       selectedFileContentDisplayStatus,
       saveButtonDisplayStatus,
     } from "../store/ComponentsDisplayPropertyStore";
-    import {newPanelID} from "../store/GrafanaDashboardStore";
+    import { newPanelID } from "../store/GrafanaDashboardStore";
     import createNewDataSource from "../grafanaAPICalls/createDataSource";
     import updateDashboard from "../grafanaAPICalls/updateGrafanaDashboard";
     import getDashboard from "../grafanaAPICalls/getCurrentPanelsArray";
+    import { useStore } from "@nanostores/react";
+
+    // const $newPanelID = useStore(newPanelID);
+    // const panelBaseurl = import.meta.env.PUBLIC_SOLO_PANEL_URL;
+    // const currentPanelLink = panelBaseurl + $newPanelID;
 
     // get the signin image
     const signinImage = document.getElementById("signinImage");
@@ -444,6 +453,5 @@ import SignUp from "../components/signUp/SignUp";
     };
 
     updateFileDetailsContainer();
-
   </script>
 </div>
