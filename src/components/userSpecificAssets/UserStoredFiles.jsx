@@ -70,22 +70,23 @@ export default function UserStoredFiles() {
           <thead>
             <tr>
               <th>File Name</th>
-              <th>File Size</th>
-              <th>Saved </th>
+              <th>File Size (KB)</th>
+              <th>Saved On</th>
               <th>File Type</th>
-              <th>Panel Link</th>
+              {/* <th>Panel Link</th> */}
               <th></th>
             </tr>
           </thead>
           <tbody>
             {$filesfetchedFromFirestore.map((file, index) => {
               return (
-                <tr key={index}>
+                <tr key={index} onClick={() => {navigator.clipboard.writeText(file.panelLink)}}
+                >
                   <td>{file.fileName}</td>
                   <td>{file.fileSize}</td>
                   <td>{file.savedAt}</td>
                   <td>{file.fileType}</td>
-                  <td>{file.panelLink}</td>
+                  {/* <td>{file.panelLink}</td> */}
                   <td
                     id="deleteDoc"
                     onClick={() => {
