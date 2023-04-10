@@ -11,6 +11,7 @@ import IframeContainer from "../components/iframeContainer/IframeContainer";
 import "../styles/index.css";
 import SignIn from "../components/signIn/SignIn";
 import SignUp from "../components/signUp/SignUp";
+import InstructionsContainer from "../components/instructionsContainer/InstructionsContainer";
 ---
 
 <div id="csv-visualizer">
@@ -34,8 +35,8 @@ import SignUp from "../components/signUp/SignUp";
           target="_blank"
           href="https://github.com/oceakun/csv-visualizer"></a>
         <img id="gitImage" src={gitImage} width="20" alt="Git" />
-        <CloneButton/>
-        <img id="infoImage" src={infoImage} width="20" alt="Info" />
+        <CloneButton />
+        <img id="instructionsImage" src={infoImage} width="20" alt="Instructions" />
       </span>
     </div>
 
@@ -95,6 +96,13 @@ import SignUp from "../components/signUp/SignUp";
     </div>
   </div>
 
+  <div id="instructionsModal" class="modal">
+    <div id="instructionsModalContent">
+      <span style="display:none" class="closeInstructionsSpan">&times;</span>
+      <InstructionsContainer client:only />
+    </div>
+  </div>
+
   <script>
     import axios from "axios";
     import { auth } from "../firebase";
@@ -124,6 +132,9 @@ import SignUp from "../components/signUp/SignUp";
     // get the git image
     const gitImage = document.getElementById("gitImage");
 
+    // get the git image
+    const instructionsImage = document.getElementById("instructionsImage");
+
     // get the git anchor tag via id
     const gitUrl = document.getElementById("gitUrl");
 
@@ -142,6 +153,9 @@ import SignUp from "../components/signUp/SignUp";
     // get the file upload modal
     const fileUploadModal = document.getElementById("uploadModal");
 
+    // get the instructions modal
+    const instructionsModal = document.getElementById("instructionsModal");
+
     // get the button that opens the modal
     const myUploadBtn = document.getElementById("myUploadBtn");
 
@@ -157,6 +171,11 @@ import SignUp from "../components/signUp/SignUp";
     const closeRegisterSpan =
       document.getElementsByClassName("closeRegisterSpan")[0];
 
+    // get the <span> element that closes the modal
+    const closeInstructionsSpan = document.getElementsByClassName(
+      "closeInstructionsSpan"
+    )[0];
+
     // get the container storing uploaded file's details
     const uploadedFilesDetails = document.getElementById(
       "uploadedFileDetailsContainer"
@@ -165,10 +184,6 @@ import SignUp from "../components/signUp/SignUp";
     const fileElem = document.getElementById("fileElem");
 
     const fileSelect = document?.getElementById("fileSelect");
-
-    const uploadFileModalContent = document?.getElementById(
-      "uploadFileModalContent"
-    );
 
     // event listener for the form submission
     if (form) {
@@ -238,25 +253,6 @@ import SignUp from "../components/signUp/SignUp";
       gitUrl?.click();
     };
 
-    // 'Upload' button clicked, open the file upload modal
-    myUploadBtn.onclick = function () {
-      window.localStorage.setItem("fileUploadModal", JSON.stringify("block"));
-      fileUploadModal.style.display = JSON.parse(
-        window.localStorage.getItem("fileUploadModal") || "{}"
-      );
-      fileUploadModal.style.flexFlow = "row nowrap";
-      fileUploadModal.style.justifyContent = "center";
-      fileUploadModal.style.alignItems = "center";
-    };
-
-    // When the user clicks on <span> (x), close the fileUploadModal
-    closeUploadFileSpan.onclick = function () {
-      window.localStorage.setItem("fileUploadModal", JSON.stringify("none"));
-      fileUploadModal.style.display = JSON.parse(
-        window.localStorage.getItem("fileUploadModal") || "{}"
-      );
-    };
-
     // When the user clicks anywhere outside of the fileUploadModal, close it
     window.onclick = function (event) {
       if (event.target == fileUploadModal) {
@@ -277,11 +273,43 @@ import SignUp from "../components/signUp/SignUp";
           window.localStorage.getItem("registerModal") || "{}"
         );
       }
+      if (event.target == instructionsModal) {
+        window.localStorage.setItem(
+          "instructionsModal",
+          JSON.stringify("none")
+        );
+        instructionsModal.style.display = JSON.parse(
+          window.localStorage.getItem("instructionsModal") || "{}"
+        );
+      }
+    };
+
+// --------------------------------------------------------------------------------------------
+
+    // 'Upload' button clicked, open the file upload modal
+    myUploadBtn.onclick = function () {
+      window.localStorage.setItem("fileUploadModal", JSON.stringify("block"));
+      fileUploadModal.style.display = JSON.parse(
+        window.localStorage.getItem("fileUploadModal") || "{}"
+      );
+      fileUploadModal.style.flexFlow = "row nowrap";
+      fileUploadModal.style.justifyContent = "center";
+      fileUploadModal.style.alignItems = "center";
+    };
+
+    // When the user clicks on <span> (x), close the fileUploadModal
+    closeUploadFileSpan.onclick = function () {
+      window.localStorage.setItem("fileUploadModal", JSON.stringify("none"));
+      fileUploadModal.style.display = JSON.parse(
+        window.localStorage.getItem("fileUploadModal") || "{}"
+      );
     };
 
     fileUploadModal.style.display = JSON.parse(
       window.localStorage.getItem("fileUploadModal") || "{}"
     );
+
+// --------------------------------------------------------------------------------------------
 
     // 'signinImage' image clicked, open the authModal
     signinImage.onclick = function () {
@@ -306,7 +334,9 @@ import SignUp from "../components/signUp/SignUp";
       window.localStorage.getItem("authModal") || "{}"
     );
 
-    // 'registerButton' image clicked, open the authModal
+// --------------------------------------------------------------------------------------------
+
+    // 'registerButton' image clicked, open the registerModal
     registerButton.onclick = function () {
       window.localStorage.setItem("registerModal", JSON.stringify("block"));
       registerModal.style.display = JSON.parse(
@@ -328,6 +358,33 @@ import SignUp from "../components/signUp/SignUp";
     registerModal.style.display = JSON.parse(
       window.localStorage.getItem("registerModal") || "{}"
     );
+
+// --------------------------------------------------------------------------------------------
+
+    // 'instructionsButton' image clicked, open the registerModal
+    instructionsImage.onclick = function () {
+      window.localStorage.setItem("instructionsModal", JSON.stringify("block"));
+      instructionsModal.style.display = JSON.parse(
+        window.localStorage.getItem("instructionsModal") || "{}"
+      );
+      instructionsModal.style.flexFlow = "row nowrap";
+      instructionsModal.style.justifyContent = "center";
+      instructionsModal.style.alignItems = "center";
+    };
+
+    // When the user clicks on <span> (x), close the authModal
+    closeInstructionsSpan.onclick = function () {
+      window.localStorage.setItem("instructionsModal", JSON.stringify("none"));
+      instructionsModal.style.display = JSON.parse(
+        window.localStorage.getItem("instructionsModal") || "{}"
+      );
+    };
+
+    instructionsModal.style.display = JSON.parse(
+      window.localStorage.getItem("instructionsModal") || "{}"
+    );
+
+// --------------------------------------------------------------------------------------------
 
     // function to set uploaded file data
     // const setUploadedFileData = (name, size, type, uploadedAt, lastModified) => {
