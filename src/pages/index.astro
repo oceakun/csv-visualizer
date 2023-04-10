@@ -4,6 +4,7 @@ import gitImage from "../assets/git.svg";
 import signinImage from "../assets/signin.svg";
 import arrowRight from "../assets/arrowRight.svg";
 import infoImage from "../assets/info.svg";
+import cloneImage from "../assets/clone.svg";
 import AuthenticatedUserEmailContainer from "../components/authenticatedUserEmailContainer/AuthenticatedUserEmailContainer";
 import SaveButton from "../components/saveButton/SaveButton";
 import CloneButton from "../components/cloneButton/CloneButton";
@@ -35,8 +36,14 @@ import InstructionsContainer from "../components/instructionsContainer/Instructi
           target="_blank"
           href="https://github.com/oceakun/csv-visualizer"></a>
         <img id="gitImage" src={gitImage} width="20" alt="Git" />
-        <CloneButton />
-        <img id="instructionsImage" src={infoImage} width="20" alt="Instructions" />
+        <img id="cloneImage" src={cloneImage} width="20" alt="Clone" />
+        <!-- <CloneButton /> -->
+        <img
+          id="instructionsImage"
+          src={infoImage}
+          width="20"
+          alt="Instructions"
+        />
       </span>
     </div>
 
@@ -123,6 +130,8 @@ import InstructionsContainer from "../components/instructionsContainer/Instructi
     // const panelBaseurl = import.meta.env.PUBLIC_SOLO_PANEL_URL;
     // const currentPanelLink = panelBaseurl + $newPanelID;
 
+    const panelBaseurl = import.meta.env.PUBLIC_SOLO_PANEL_URL;
+
     // get the signin image
     const signinImage = document.getElementById("signinImage");
 
@@ -131,6 +140,9 @@ import InstructionsContainer from "../components/instructionsContainer/Instructi
 
     // get the git image
     const gitImage = document.getElementById("gitImage");
+
+    // get the clone image
+    const cloneImage = document.getElementById("cloneImage");
 
     // get the git image
     const instructionsImage = document.getElementById("instructionsImage");
@@ -253,6 +265,13 @@ import InstructionsContainer from "../components/instructionsContainer/Instructi
       gitUrl?.click();
     };
 
+    // git image clicked, click gitUrl anchor tag
+    cloneImage.onclick = function () {
+      // copy to clipboard, the currentPanelLink
+      const currentPanelURL = panelBaseurl + JSON.parse(localStorage.getItem("newPanelId"));
+      navigator.clipboard.writeText(currentPanelURL);
+    };
+
     // When the user clicks anywhere outside of the fileUploadModal, close it
     window.onclick = function (event) {
       if (event.target == fileUploadModal) {
@@ -284,7 +303,7 @@ import InstructionsContainer from "../components/instructionsContainer/Instructi
       }
     };
 
-// --------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
 
     // 'Upload' button clicked, open the file upload modal
     myUploadBtn.onclick = function () {
@@ -309,7 +328,7 @@ import InstructionsContainer from "../components/instructionsContainer/Instructi
       window.localStorage.getItem("fileUploadModal") || "{}"
     );
 
-// --------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
 
     // 'signinImage' image clicked, open the authModal
     signinImage.onclick = function () {
@@ -334,7 +353,7 @@ import InstructionsContainer from "../components/instructionsContainer/Instructi
       window.localStorage.getItem("authModal") || "{}"
     );
 
-// --------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
 
     // 'registerButton' image clicked, open the registerModal
     registerButton.onclick = function () {
@@ -359,7 +378,7 @@ import InstructionsContainer from "../components/instructionsContainer/Instructi
       window.localStorage.getItem("registerModal") || "{}"
     );
 
-// --------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
 
     // 'instructionsButton' image clicked, open the registerModal
     instructionsImage.onclick = function () {
@@ -384,7 +403,7 @@ import InstructionsContainer from "../components/instructionsContainer/Instructi
       window.localStorage.getItem("instructionsModal") || "{}"
     );
 
-// --------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
 
     // function to set uploaded file data
     // const setUploadedFileData = (name, size, type, uploadedAt, lastModified) => {
