@@ -1,3 +1,15 @@
-.instructionsContainer{
-    
+.instructionsContainer {
+display:flex;
+flex-flow:column nowrap;
+justify-content: center;
+align-items: center;
+}
+
+.individualDiv {
+  text-align: left;
+}
+
+.individualDiv mark {
+  color: white;
+  background:transparent;
 }

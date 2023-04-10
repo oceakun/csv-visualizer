@@ -65,7 +65,7 @@ main {
   color: white;
   cursor: pointer;
   border: none;
-  opacity:0.6;
+  opacity: 0.6;
   /* &:active {
       background-color: none;
     } */
@@ -79,7 +79,7 @@ main {
   color: white;
   cursor: pointer;
   border: none;
-  opacity:1;
+  opacity: 1;
   /* &:active {
       background-color: none;
     } */
@@ -208,12 +208,10 @@ main {
   font-family: var(--font-mono), JetBrains Mono, ui-monospace, SFMono-Regular,
     Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   display: block;
-  margin-top: 5rem;
-  margin-left: 2rem;
-  margin-right: 2rem;
+  margin: 2rem;
 }
 
-#authModalContent{
+#authModalContent {
   line-height: 1.6;
   border: none;
   background-color: #0f243d;
@@ -224,13 +222,10 @@ main {
   font-family: var(--font-mono), JetBrains Mono, ui-monospace, SFMono-Regular,
     Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   display: block;
-  margin-top: 5rem;
-  margin-left: 2rem;
-  margin-right: 2rem;
+  margin: 2rem;
 }
 
-#registerModalContent{
-  
+#registerModalContent {
   line-height: 1.6;
   border: none;
   background-color: #0f243d;
@@ -241,9 +236,20 @@ main {
   font-family: var(--font-mono), JetBrains Mono, ui-monospace, SFMono-Regular,
     Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   display: block;
-  margin-top: 5rem;
-  margin-left: 2rem;
-  margin-right: 2rem;
+  margin: 2rem;
+}
+
+#instructionsModalContent {
+  line-height: 1.6;
+  border: none;
+  background-color: #0f243d;
+  padding: 3rem;
+  border-radius: 0.4rem;
+  /* width: auto; */
+  font-family: var(--font-mono), JetBrains Mono, ui-monospace, SFMono-Regular,
+    Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  display: block;
+  margin: 2rem;
 }
 
 .header {
