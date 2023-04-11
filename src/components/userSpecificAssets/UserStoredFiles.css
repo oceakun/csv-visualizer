@@ -57,6 +57,12 @@
   cursor: pointer;
 }
 
+.styled-table tbody tr:active {
+  background-color: rgb(13, 13, 13);
+  color: #6cd8e9;
+  cursor: pointer;
+}
+
 .styled-table th {
   border: 1px solid rgb(37, 37, 40);
   border-bottom: 1px solid rgb(101, 101, 101);
@@ -88,4 +94,44 @@
 .selectedFileActionOptions img:hover {
   cursor: pointer;
   opacity: 0.8;
+}
+
+/* copy tooltip CSS */
+.tooltip2 {
+  position: relative;
+  /* display: inline-block; */
+}
+
+.tooltip2 .tooltiptext2 {
+  visibility: hidden;
+  width: 120px;
+  background-color: rgb(13, 13, 13);
+  color: #6cd8e9;
+  text-align: center;
+  border-radius: 4px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -65px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  font-size: 12px;
+}
+
+.tooltip2 .tooltiptext2::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 10px;
+  border-style: solid;
+  border-color: rgb(13, 13, 13) transparent transparent transparent;
+}
+
+.tooltip2:hover .tooltiptext2 {
+  visibility: visible;
+  opacity: 1;
 }

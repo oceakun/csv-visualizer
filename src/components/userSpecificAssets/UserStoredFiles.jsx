@@ -80,7 +80,7 @@ export default function UserStoredFiles() {
           <tbody>
             {$filesfetchedFromFirestore.map((file, index) => {
               return (
-                <tr key={index} onClick={() => {navigator.clipboard.writeText(file.panelLink)}}
+                <tr className="tooltip2" key={index} onClick={() => {navigator.clipboard.writeText(file.panelLink)}}
                 >
                   <td>{file.fileName}</td>
                   <td>{file.fileSize}</td>
@@ -95,7 +95,9 @@ export default function UserStoredFiles() {
                   >
                     <img id="binImage" src={binImage} width="16" alt="bin" />
                   </td>
+                  <span class="tooltiptext2">Copy Panel ID</span>
                 </tr>
+                
               );
             })}
           </tbody>
