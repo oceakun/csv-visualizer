@@ -29,21 +29,38 @@ import InstructionsContainer from "../components/instructionsContainer/Instructi
       </span>
 
       <span class="headerOptions">
+        <div class="tooltip">
         <img id="signinImage" src={signinImage} width="20" alt="SignIn" />
+        <span class="tooltiptext">Sign In</span>
+      </div>
+
         <a
           id="gitUrl"
           style="display:none"
           target="_blank"
           href="https://github.com/oceakun/csv-visualizer"></a>
-        <img id="gitImage" src={gitImage} width="20" alt="Git" />
-        <img id="cloneImage" src={cloneImage} width="20" alt="Clone" />
+        <div class="tooltip">
+          <img id="gitImage" src={gitImage} width="20" alt="Git" />
+          <span class="tooltiptext">Github repo</span>
+        </div>
+
+        <div class="tooltip">
+          <img id="cloneImage" src={cloneImage} width="20" alt="Clone" />
+          <span class="tooltiptext">Copy Panel ID</span>
+        </div>
+
         <!-- <CloneButton /> -->
+        <div class="tooltip">
         <img
           id="instructionsImage"
           src={infoImage}
           width="20"
           alt="Instructions"
         />
+        <span class="tooltiptext">Help</span>
+      </div>
+
+
       </span>
     </div>
 
@@ -66,7 +83,7 @@ import InstructionsContainer from "../components/instructionsContainer/Instructi
 
   <div id="uploadModal" class="modal">
     <div id="uploadFileModalContent">
-      <span style="display:none" class="closeUploadFileSpan">&times;</span><br
+      <span class="closeUploadFileSpan">X</span><br
       />
       <button id="fileSelect">Browse</button>
       <div id="uploadedFileDetailsContainer"></div>
@@ -89,7 +106,7 @@ import InstructionsContainer from "../components/instructionsContainer/Instructi
 
   <div id="authModal" class="modal">
     <div id="authModalContent">
-      <span style="display:none" class="closeAuthSpan">&times;</span>
+      <span class="closeAuthSpan">X</span>
       <SignIn client:only />
       <button id="registerButton">Sign-Up</button>
     </div>
@@ -97,7 +114,7 @@ import InstructionsContainer from "../components/instructionsContainer/Instructi
 
   <div id="registerModal" class="modal">
     <div id="registerModalContent">
-      <span style="display:none" class="closeRegisterSpan">&times;</span>
+      <span class="closeRegisterSpan">X</span>
       <SignUp client:only />
       <!-- <button id="authButton">Sign-In</button> -->
     </div>
@@ -105,7 +122,7 @@ import InstructionsContainer from "../components/instructionsContainer/Instructi
 
   <div id="instructionsModal" class="modal">
     <div id="instructionsModalContent">
-      <span style="display:none" class="closeInstructionsSpan">&times;</span>
+      <span class="closeInstructionsSpan">X</span>
       <InstructionsContainer client:only />
     </div>
   </div>
@@ -268,7 +285,8 @@ import InstructionsContainer from "../components/instructionsContainer/Instructi
     // git image clicked, click gitUrl anchor tag
     cloneImage.onclick = function () {
       // copy to clipboard, the currentPanelLink
-      const currentPanelURL = panelBaseurl + JSON.parse(localStorage.getItem("newPanelId"));
+      const currentPanelURL =
+        panelBaseurl + JSON.parse(localStorage.getItem("newPanelId"));
       navigator.clipboard.writeText(currentPanelURL);
     };
 
