@@ -252,6 +252,29 @@ main {
   margin: 2rem;
 }
 
+.closeInstructionsSpan,
+.closeRegisterSpan,
+.closeAuthSpan,
+.closeUploadFileSpan {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-end;
+  color: rgb(207, 152, 152);
+  text-align: center;
+  font-size: 14px;
+}
+
+.closeInstructionsSpan:hover,
+.closeRegisterSpan:hover,
+.closeAuthSpan:hover,
+.closeUploadFileSpan:hover {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-end;
+  cursor: pointer;
+  color: rgb(255, 0, 0);
+}
+
 .header {
   display: flex;
   flex-flow: column nowrap;
@@ -277,7 +300,6 @@ main {
 }
 
 .headerOptions img {
-  color: white;
   border: 1px solid transparent;
   border-radius: 35%;
   padding: 0.5rem;
@@ -286,8 +308,55 @@ main {
 }
 
 .headerOptions img:hover {
+  background-color: #000000;
   cursor: pointer;
-  opacity: 0.6;
+  /* opacity: 1; */
+}
+
+.headerOptions img:active {
+  background-color: #091625;
+  cursor: pointer;
+  /* opacity: 1; */
+}
+
+/* copy tooltip CSS */
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: rgb(0, 0, 0);
+  color: #6cd8e9;
+  text-align: center;
+  border-radius: 4px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -65px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  font-size: 12px;
+}
+
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 10px;
+  border-style: solid;
+  border-color: rgb(0, 0, 0) transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
 }
 
 .primaryHalf {
