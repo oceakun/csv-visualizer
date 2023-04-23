@@ -252,9 +252,9 @@ main {
   margin: 2rem;
 }
 
-.closeInstructionsSpan,
-.closeRegisterSpan,
-.closeAuthSpan,
+.closeInstructionsSpan ,
+.closeRegisterSpan ,
+.closeAuthSpan ,
 .closeUploadFileSpan {
   display: flex;
   flex-flow: row nowrap;
@@ -264,15 +264,26 @@ main {
   font-size: 14px;
 }
 
-.closeInstructionsSpan:hover,
-.closeRegisterSpan:hover,
-.closeAuthSpan:hover,
-.closeUploadFileSpan:hover {
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: flex-end;
+.closeInstructionsSpan p,
+.closeRegisterSpan p,
+.closeAuthSpan p,
+.closeUploadFileSpan p{
+  color: rgb(207, 152, 152);
+  border:1px solid rgb(102, 1, 1);
+  background: rgb(102, 1, 1);
+  padding:0.3rem;
+  text-align: center;
+  font-size: 14px;
+}
+
+.closeInstructionsSpan:hover p,
+.closeRegisterSpan:hover p,
+.closeAuthSpan:hover p,
+.closeUploadFileSpan:hover p{
   cursor: pointer;
   color: rgb(255, 0, 0);
+  background: rgb(102, 1, 1);
+  border-color:rgb(102, 1, 1);
 }
 
 .header {

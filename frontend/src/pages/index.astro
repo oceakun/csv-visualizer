@@ -83,7 +83,8 @@ import InstructionsContainer from "../components/instructionsContainer/Instructi
 
   <div id="uploadModal" class="modal">
     <div id="uploadFileModalContent">
-      <span class="closeUploadFileSpan">X</span><br
+      <span class="closeUploadFileSpan">
+        <p>X</p></span><br
       />
       <button id="fileSelect">Browse</button>
       <div id="uploadedFileDetailsContainer"></div>
@@ -106,7 +107,7 @@ import InstructionsContainer from "../components/instructionsContainer/Instructi
 
   <div id="authModal" class="modal">
     <div id="authModalContent">
-      <span class="closeAuthSpan">X</span>
+      <span class="closeAuthSpan"><p>X</p></span>
       <SignIn client:only />
       <button id="registerButton">Sign-Up</button>
     </div>
@@ -114,7 +115,7 @@ import InstructionsContainer from "../components/instructionsContainer/Instructi
 
   <div id="registerModal" class="modal">
     <div id="registerModalContent">
-      <span class="closeRegisterSpan">X</span>
+      <span class="closeRegisterSpan"><p>X</p></span>
       <SignUp client:only />
       <!-- <button id="authButton">Sign-In</button> -->
     </div>
@@ -122,7 +123,7 @@ import InstructionsContainer from "../components/instructionsContainer/Instructi
 
   <div id="instructionsModal" class="modal">
     <div id="instructionsModalContent">
-      <span class="closeInstructionsSpan">X</span>
+      <span class="closeInstructionsSpan"><p>X</p></span>
       <InstructionsContainer client:only />
     </div>
   </div>
