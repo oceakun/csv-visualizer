@@ -29,12 +29,12 @@ export default function AuthenticatedUserEmailContainer() {
   return (
     <>
       {$userEmail !== "" ? (
-        <span id="greetUser">
-          | <mark>{$userEmail}</mark>{" "}
-          <button onClick={signOutHandler}>Sign out ?</button>
+        <span>
+          <mark id="greetUser">| {$userEmail.substring(0,5)}...</mark>{" "}
+          <button id="signOut" onClick={signOutHandler}>Sign out ?</button>
         </span>
       ) : (
-        <span id="greetUser">.</span>
+        <span>.</span>
       )}
     </>
   );
