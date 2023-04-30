@@ -26,7 +26,7 @@ func UploadFile(c *gin.Context){
 	}
 
 	// Create the file on disk
-	filepath := "D:/osc/ccextractor-take-home-assignment/Golang/static/" + file.Filename
+	filepath := "/home/oceakun/Desktop/osc/csviz/csv-visualizer/backend/static/" + file.Filename
 	dst, err := os.Create(filepath)
 	if err != nil {
 		c.String(http.StatusInternalServerError, "Error creating file")
