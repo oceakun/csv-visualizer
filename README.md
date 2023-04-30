@@ -12,12 +12,15 @@ csv-visualizer, a simple full-stack web app that accepts csv exports and renders
 ## visualize a file
 
 ### upload file
+
 ![image](https://user-images.githubusercontent.com/83641627/235371065-dd4b70db-8435-486b-8e20-c9c5e14e48ec.png)
+
 - click on 'Upload'
 - browse through your computer to choose a csv file
 - click on 'Submit'
 - click anywhere outside the modal to close it
 - click om 'Visualize' and tadaa..your csv file visualized through a grafana panel, in a tabular format
+
 ![image](https://user-images.githubusercontent.com/83641627/235371155-ee82eb54-bb2d-43f9-808d-adb0ffc4a590.png)
 
 ### share panel 
@@ -25,12 +28,17 @@ csv-visualizer, a simple full-stack web app that accepts csv exports and renders
 
 ### register
 - click on the "Sign-In" button (in the header)
+
 ![image](https://user-images.githubusercontent.com/83641627/235371398-3d4769ce-a566-4bb3-8117-7b50c009cf2b.png)
+
 - click on 'New here? Sign Up'
+
 ![image](https://user-images.githubusercontent.com/83641627/235371262-4e0e21b7-680e-47e3-bdc1-c4eaba460dbc.png)
+
 - enter creds and click on 'Sign Up'
 - creating an account will automatically log you in
 - a table containing previously saved files (if any) will be rendered 
+
 ![image](https://user-images.githubusercontent.com/83641627/235370948-dd1322e3-f421-4815-b98f-7a189158d762.png)
 
 
@@ -39,7 +47,7 @@ csv-visualizer, a simple full-stack web app that accepts csv exports and renders
 - hovering a record will display the "delete" and "clone" icons
   - click on "clone" icon, this will copy the panel link to clipboard
   - click on "delete" icon, to delete a panel record from the database 
-![image](https://user-images.githubusercontent.com/83641627/229306634-41ab4716-278a-4fb5-b017-55228c5b0645.png)
+
 
 ## the "how"  
 - user selectes a file and clicks on 'submit' 
