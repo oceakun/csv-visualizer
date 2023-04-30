@@ -29,7 +29,7 @@ csv-visualizer, a simple full-stack web app that accepts csv exports and renders
 ### register
 - click on the "Sign-In" button (in the header)
 
-![image](https://user-images.githubusercontent.com/83641627/235372162-99902a60-1735-4aae-a34a-e735fab229f9.png)
+![image](https://user-images.githubusercontent.com/83641627/235372333-3d59406c-1855-4973-97c6-ea2d3361818b.png)
 
 - click on 'New here? Sign Up'
 
