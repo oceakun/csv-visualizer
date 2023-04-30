@@ -85,69 +85,65 @@ function SignUp() {
   };
 
   return (
-    <div className="SignUpContainer">
-      <div className="RegistrationContainer">
-        <h3>Register</h3>
-        <div className="InputFieldContainer">
-          <div className={registrationFailureWarningClass}>
-            <p style={{ textAlign: "left" }}>
-              * failed to register,
-              <br />
-              please try again
-            </p>
-          </div>
-          <div className={registrationSuccessfulMessageClass}>
-            <p style={{ textAlign: "left" }}>
-              * success! sign-in
-              <br />
-              with your creds now
-            </p>
-          </div>
-          <p>E-mail</p>
-          <input
-            type="email"
-            onChange={handleEmail}
-            value={registrationEmail}
-            name="email"
-            required
-          ></input>
-        </div>
+    <div id="SignUpContainer">
+      <h3>Register</h3>
 
-        <div className={alreadyInUseWarningClass}>
-          <p style={{ textAlign: "left" }}>* duplicate e-mail entered.</p>
-        </div>
+      <div className={registrationFailureWarningClass}>
+        <p style={{ textAlign: "left" }}>
+          * failed to register, please try again
+        </p>
+      </div>
+      <div className={registrationSuccessfulMessageClass}>
+        <p style={{ textAlign: "left" }}>
+          * success! sign-in with your creds now
+        </p>
+      </div>
 
-        <div className="InputFieldContainer">
-          <p>Password</p>
-          <input
-            type="password"
-            onChange={handlePassword}
-            value={registrationPassword}
-            name="password"
-            required
-          ></input>
-        </div>
+      <div className="SignUpInputFieldContainer">
+        <p>E-mail</p>
+        <input
+          type="email"
+          onChange={handleEmail}
+          value={registrationEmail}
+          name="email"
+          required
+        ></input>
+      </div>
 
-        <div className="InputFieldContainer">
-          <p>Confirm password</p>
-          <input
-            type="password"
-            onChange={handleConfirmedPassword}
-            value={confirmedRegistrationPassword}
-            name="password"
-            required
-          ></input>
-        </div>
+      <div className={alreadyInUseWarningClass}>
+        <p style={{ textAlign: "left" }}>* duplicate e-mail entered.</p>
+      </div>
 
-        <div className={unmatchedPasswordWarningClass}>
-          <p style={{ textAlign: "left" }}>* passwords don't match.</p>
-        </div>
+      <div className="SignUpInputFieldContainer">
+        <p>Password</p>
+        <input
+          type="password"
+          onChange={handlePassword}
+          value={registrationPassword}
+          name="password"
+          required
+        ></input>
+      </div>
 
-        <div className="SubmitButtonContainer">
-          <button type="submit" onClick={register}>
-            Sign-Up
-          </button>
-        </div>
+      <div className="SignUpInputFieldContainer">
+        <p>Confirm password</p>
+        <input
+          type="password"
+          onChange={handleConfirmedPassword}
+          value={confirmedRegistrationPassword}
+          name="password"
+          required
+        ></input>
+      </div>
+
+      <div className={unmatchedPasswordWarningClass}>
+        <p style={{ textAlign: "left" }}>* passwords don't match.</p>
+      </div>
+
+      <div id="signUpButtonContainer">
+        <button type="submit" onClick={register}>
+          Sign-Up
+        </button>
       </div>
     </div>
   );
