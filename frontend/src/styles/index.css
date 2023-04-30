@@ -1,89 +1,56 @@
 :root {
   --accent: 124, 58, 237;
-  --accent-gradient: linear-gradient(
-    45deg,
-    rgb(var(--accent)),
-    #da62c4 30%,
-    white 60%
-  );
+  --accent-gradient: linear-gradient(45deg,
+      rgb(var(--accent)),
+      #da62c4 30%,
+      white 60%);
   --accent-primary: 124, 58, 237;
   --accent-secondary: 161, 255, 236;
-  --accent-gradient-primary: linear-gradient(
-    45deg,
-    rgb(var(--accent-primary)),
-    #da62c4 30%,
-    white 60%
-  );
-  --accent-gradient-secondary: linear-gradient(
-    15deg,
-    rgb(var(--accent-secondary)),
-    #68e835 30%,
-    white 40%
-  );
+  --accent-gradient-primary: linear-gradient(45deg,
+      rgb(var(--accent-primary)),
+      #da62c4 30%,
+      white 60%);
+  --accent-gradient-secondary: linear-gradient(15deg,
+      rgb(var(--accent-secondary)),
+      #68e835 30%,
+      white 40%);
   --font-mono: "__JetBrains_Mono_5cc6d4", "__JetBrains_Mono_Fallback_5cc6d4";
 }
 
 html {
   font-family: system-ui, sans-serif;
-  background-color: #0f243d;
+  background-color: rgb(17, 18, 23);
 }
+
 code {
   font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
     Bitstream Vera Sans Mono, Courier New, monospace;
-}
-
-main {
-  padding: 1.5rem;
 }
 
 #csv-visualizer {
   display: flex;
   flex-flow: column nowrap;
   justify-content: space-evenly;
-  gap: 1rem;
+  gap: 2rem;
 }
 
 #fileSelect {
-  border-radius: 0.2rem;
-  height: 2rem;
-  width: 10rem;
-  background-color: rgb(8, 8, 36);
-  color: white;
-  cursor: pointer;
-  border: none;
-  opacity: 1;
-  /* &:active {
-      background-color: none;
-    } */
+  background-color: #111217;
+  background-image: none;
+  border: 1px solid #ccccdc26;
+  border-radius: 4px;
+  display: inline-block;
+  color: #ccccdc;
+  padding: 0rem 2rem;
+  height: 31px;
+  opacity:0.9;
 }
 
 #fileSelect:hover {
-  border-radius: 0.2rem;
-  height: 2rem;
-  width: 10rem;
-  background-color: rgb(8, 8, 36);
-  color: white;
-  cursor: pointer;
-  border: none;
-  opacity: 0.6;
-  /* &:active {
-      background-color: none;
-    } */
+  cursor:pointer;
+  opacity:1;
 }
 
-#fileSelect:active {
-  border-radius: 0.2rem;
-  height: 2rem;
-  width: 10rem;
-  background-color: rgb(8, 8, 36);
-  color: white;
-  cursor: pointer;
-  border: none;
-  opacity: 1;
-  /* &:active {
-      background-color: none;
-    } */
-}
 
 #fileSubmit {
   border: 1px solid rgb(120, 239, 166);
@@ -94,9 +61,6 @@ main {
   background-color: transparent;
   cursor: pointer;
   opacity: 0.6;
-  /* &:active {
-      background-color: none;
-    } */
 }
 
 #shareFile {
@@ -108,9 +72,6 @@ main {
   cursor: pointer;
   border: none;
   opacity: 0.8;
-  /* &:active {
-      background-color: none;
-    } */
 }
 
 #deleteFile {
@@ -138,17 +99,23 @@ main {
   cursor: default;
   opacity: 1;
 
-  border-image: linear-gradient(
-      45deg,
+  border-image: linear-gradient(45deg,
       teal 10%,
       transparent 10%,
       transparent 50%,
       transparent 50%,
       transparent 90%,
-      teal 90%
-    )
-    5;
+      teal 90%) 5;
 }
+
+#fileDetails {
+  display: flex;
+  flex-flow: column nowrap;
+  /* justify-content: flex-start;
+  align-items: flex-start; */
+  color: rgba(204, 204, 220, 0.65);
+}
+
 #viewUploadedFile {
   border: 1px solid #e0f3f4;
   border-radius: 0.2rem;
@@ -161,6 +128,7 @@ main {
       background-color: none;
     } */
 }
+
 #uploadedFileDisplayedHere {
   border: 1px solid #e0f3f4;
   border-radius: 0.2rem;
@@ -190,107 +158,180 @@ main {
   border-radius: 0.3rem;
   font-size: 19px;
 }
+
 #appNameSubText {
   font-size: 12px;
+  color: #d0aaf0;
+  opacity: 0.9;
+}
 
-  color: #fafae7;
-  opacity: 0.7;
+.modal {
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  background-image: linear-gradient(135deg, rgba(235, 173, 204, 0.2), rgba(0, 0, 255, 0.1));
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.closeInstructionsSpan,
+.closeRegisterSpan,
+.closeAuthSpan,
+.closeQuerySpan,
+.closeUploadFileSpan {
+  position: absolute;
+  z-index: 2;
+  border-radius: 5px;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  color: rgba(255, 0, 0, 0.95);
+  background-color: rgba(255, 0, 0, 0.2);
+  padding: 0.3rem 0.6rem;
+  /* border-radius: 50%; */
+  border: 1px solid rgba(255, 0, 0, 0.15);
+  font-family: var(--font-mono), JetBrains Mono, ui-monospace, SFMono-Regular,
+    Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  left: 95%;
+  top: 5%;
+  transform: translate(-50%, -50%);
+}
+
+.closeInstructionsSpan:hover,
+.closeRegisterSpan:hover,
+.closeAuthSpan:hover,
+.closeQuerySpan:hover,
+.closeUploadFileSpan:hover {
+  cursor: pointer;
+  background-color: rgba(255, 0, 0, 0.3);
 }
 
 #uploadFileModalContent {
-  line-height: 1.6;
-  border: 0.2em dashed #17355a;
-  background-color: #0f243d;
-  padding: 3rem;
+  position: absolute;
+  z-index: 2;
   border-radius: 0.4rem;
-  width: auto;
-  text-align: center;
-  font-family: var(--font-mono), JetBrains Mono, ui-monospace, SFMono-Regular,
-    Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  display: block;
-  margin: 2rem;
-}
-
-#authModalContent {
-  line-height: 1.6;
-  border: none;
-  background-color: #0f243d;
-  padding: 3rem;
-  border-radius: 0.4rem;
-  width: auto;
-  text-align: center;
-  font-family: var(--font-mono), JetBrains Mono, ui-monospace, SFMono-Regular,
-    Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  display: block;
-  margin: 2rem;
-}
-
-#registerModalContent {
-  line-height: 1.6;
-  border: none;
-  background-color: #0f243d;
-  padding: 3rem;
-  border-radius: 0.4rem;
-  width: auto;
-  text-align: center;
-  font-family: var(--font-mono), JetBrains Mono, ui-monospace, SFMono-Regular,
-    Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  display: block;
-  margin: 2rem;
-}
-
-#instructionsModalContent {
-  line-height: 1.6;
-  border: none;
-  background-color: #0f243d;
-  padding: 3rem;
-  border-radius: 0.4rem;
-  /* width: auto; */
-  font-family: var(--font-mono), JetBrains Mono, ui-monospace, SFMono-Regular,
-    Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  display: block;
-  margin: 2rem;
-}
-
-.closeInstructionsSpan ,
-.closeRegisterSpan ,
-.closeAuthSpan ,
-.closeUploadFileSpan {
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: flex-end;
-  color: rgb(207, 152, 152);
-  text-align: center;
-  font-size: 14px;
-}
-
-.closeInstructionsSpan p,
-.closeRegisterSpan p,
-.closeAuthSpan p,
-.closeUploadFileSpan p{
-  color: rgb(207, 152, 152);
-  border:1px solid rgb(102, 1, 1);
-  background: rgb(102, 1, 1);
-  padding:0.3rem;
-  text-align: center;
-  font-size: 14px;
-}
-
-.closeInstructionsSpan:hover p,
-.closeRegisterSpan:hover p,
-.closeAuthSpan:hover p,
-.closeUploadFileSpan:hover p{
-  cursor: pointer;
-  color: rgb(255, 0, 0);
-  background: rgb(102, 1, 1);
-  border-color:rgb(102, 1, 1);
-}
-
-.header {
   display: flex;
   flex-flow: column nowrap;
   justify-content: center;
   align-items: center;
+  gap: 1rem;
+  margin: auto;
+  border: 2px dashed rgba(204, 204, 220, 0.2);
+  color: rgba(204, 204, 220, 0.65);
+  background-color: rgb(24, 27, 31);
+  padding: 2rem 2rem;
+  font-family: var(--font-mono), JetBrains Mono, ui-monospace, SFMono-Regular,
+    Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  left: 50%;
+  top: 40%;
+  transform: translate(-50%, -50%);
+}
+
+#queryModalContent {
+  position: absolute;
+  z-index: 2;
+  border-radius: 0.4rem;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid rgba(204, 204, 220, 0.07);
+  color: rgba(204, 204, 220, 0.65);
+  background-color: rgb(24, 27, 31);
+  padding: 2rem 2rem;
+  font-family: var(--font-mono), JetBrains Mono, ui-monospace, SFMono-Regular,
+    Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  left: 50%;
+  top: 40%;
+  transform: translate(-50%, -50%);
+}
+
+#authModalContent {
+  position: absolute;
+  z-index: 2;
+  border-radius: 0.4rem;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid rgba(204, 204, 220, 0.07);
+  color: rgba(204, 204, 220, 0.65);
+  background-color: rgb(24, 27, 31);
+  padding: 2rem 2rem;
+  font-family: var(--font-mono), JetBrains Mono, ui-monospace, SFMono-Regular,
+    Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  left: 50%;
+  top: 40%;
+  transform: translate(-50%, -50%);
+}
+
+#registerModalContent {
+  position: absolute;
+  z-index: 2;
+  border-radius: 0.4rem;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid rgba(204, 204, 220, 0.07);
+  color: rgba(204, 204, 220, 0.65);
+  background-color: rgb(24, 27, 31);
+  padding: 2rem 2rem;
+  font-family: var(--font-mono), JetBrains Mono, ui-monospace, SFMono-Regular,
+    Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  left: 50%;
+  top: 40%;
+  transform: translate(-50%, -50%);
+}
+
+#instructionsModalContent {
+  position: absolute;
+  z-index: 2;
+  border-radius: 0.4rem;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid rgba(204, 204, 220, 0.07);
+  color: rgba(204, 204, 220, 0.65);
+  background-color: rgb(24, 27, 31);
+  padding: 2rem 2rem;
+  font-family: var(--font-mono), JetBrains Mono, ui-monospace, SFMono-Regular,
+    Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#registerButton {
+  background: transparent;
+  background-image: none;
+  border: none;
+  border-radius: 4px;
+  display: inline-block;
+  color: #445fe4;
+  height: 31px;
+  margin-top: 1rem;
+  opacity: 0.9;
+}
+
+#registerButton:hover {
+  opacity: 1;
+  cursor: pointer;
+}
+
+.header {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
 }
 
 #title {
@@ -306,28 +347,26 @@ main {
   justify-content: flex-end;
   align-items: center;
   gap: 1rem;
-  /* background-color: #091625; */
-  padding: 0.5rem 1.5rem 0.5rem 1.5rem;
+  padding: 0rem 0.9rem;
 }
 
 .headerOptions img {
-  border: 1px solid transparent;
-  border-radius: 35%;
-  padding: 0.5rem;
+  padding: 0.3rem;
   opacity: 0.7;
-  background-color: #091625;
+  border-radius: 5px;
+  background: rgba(204, 204, 220, 0.16);
+  color: rgb(204, 204, 220);
+  border: 1px solid rgba(120, 239, 166, 0.2);
 }
 
 .headerOptions img:hover {
-  background-color: #000000;
+  background: rgba(204, 204, 220, 0.26);
   cursor: pointer;
-  /* opacity: 1; */
 }
 
 .headerOptions img:active {
   background-color: #091625;
   cursor: pointer;
-  /* opacity: 1; */
 }
 
 /* copy tooltip CSS */
@@ -338,21 +377,22 @@ main {
 
 .tooltip .tooltiptext {
   visibility: hidden;
-  width: 120px;
+  width: 65px;
   background-color: rgb(0, 0, 0);
   color: #6cd8e9;
   text-align: center;
-  border-radius: 4px;
-  padding: 5px 0;
+  /* border-radius: 4px; */
+  padding: 0.5rem 0.1rem;
   position: absolute;
   z-index: 1;
-  bottom: 125%;
-  left: 50%;
-  margin-left: -65px;
+  top: 125%;
+  left: 0%;
+  margin-left: -20px;
   opacity: 0;
   transition: opacity 0.3s;
   font-size: 12px;
 }
+
 
 .tooltip .tooltiptext::after {
   content: "";
@@ -360,9 +400,9 @@ main {
   top: 100%;
   left: 50%;
   margin-left: -5px;
-  border-width: 10px;
-  border-style: solid;
-  border-color: rgb(0, 0, 0) transparent transparent transparent;
+  /* border-width: 10px; */
+  /* border-style: solid; */
+  /* border-color: rgb(0, 0, 0) transparent transparent transparent; */
 }
 
 .tooltip:hover .tooltiptext {
@@ -374,26 +414,28 @@ main {
   display: flex;
   flex-flow: column nowrap;
   justify-content: center;
-  align-items: center;
-  gap: 2.5rem;
+  /* align-items: center; */
+  gap: 4.5rem;
 }
+
 @media only screen and (max-width: 600px) {
   .primaryHalf {
     display: flex;
     flex-flow: column nowrap;
     justify-content: space-evenly;
-    width: 100%;
-    height: 100%;
+    /* width: 100%;
+    height: 100%; */
     align-items: center;
   }
 }
 
-#secondaryHalf {
+/* #secondaryHalf {
   display: flex;
   flex-flow: row nowrap;
   justify-content: center;
   align-items: center;
 }
+
 @media only screen and (max-width: 600px) {
   #secondaryHalf {
     display: flex;
@@ -402,22 +444,7 @@ main {
     width: 100%;
     align-items: center;
   }
-}
-/* The Modal (background) */
-.modal {
-  display: none;
-  flex-flow: row nowrap;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  z-index: 1;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgba(0, 0, 0, 0.7);
-}
+} */
 
 /* The Close Button */
 .close {
@@ -438,35 +465,41 @@ main {
 #actionbuttons {
   display: flex;
   flex-flow: row nowrap;
+  justify-content: center;
   gap: 1rem;
   margin-top: -30px;
 }
 
 #myUploadBtn {
-  border-radius: 0.2rem;
+  border-radius: 2px;
   height: 2rem;
-  width: 10rem;
-  background-color: rgb(8, 8, 36);
-  color: #959557;
+  /* width: 10rem; */
+  padding: 0rem 1rem;
+  border: 1px solid rgba(0, 0, 255, 0.7);
+  background-color: transparent;
+  color: rgb(0, 0, 255);
+}
+
+#myUploadBtn:hover {
   cursor: pointer;
-  border: none;
-  /* &:active {
-      background-color: none;
-    } */
+  color: rgb(0, 153, 255);
+  background-color: rgba(0, 0, 255, 0.1);
 }
 
 #myVisualizeBtn {
-  border-radius: 0.2rem;
+  border-radius: 2px;
   height: 2rem;
-  width: 10rem;
-  background-color: rgb(8, 8, 36);
-  color: rgb(8, 8, 36);
+  /* width: 10rem; */
+  padding: 0rem 1rem;
+  background-color: transparent;
+  color: rgb(var(--accent));
+  border: 1px solid rgba(124, 58, 237, 0.7)
+}
+
+#myVisualizeBtn:hover {
   cursor: pointer;
-  border: none;
-  background-image: linear-gradient(45deg, rgb(var(--accent)), #da62c4 70%);
-  /* &:active {
-      background-color: none;
-    } */
+  color: rgb(146, 50, 255);
+  background-color: rgba(124, 58, 237, 0.1);
 }
 
 #uploadedFilesDetailsContainer {
@@ -489,7 +522,7 @@ main {
 }
 
 #formSubmitButton {
-  border: 1px solid rgb(120, 239, 166);
+  /* border: 1px solid rgb(120, 239, 166);
   border-radius: 0.2rem;
   height: 2rem;
   width: 10rem;
@@ -497,24 +530,22 @@ main {
   background-color: transparent;
   cursor: pointer;
   opacity: 0.6;
+ */
+
+  border-radius: 2px;
+  height: 2rem;
+  /* width: 10rem; */
+  padding: 0rem 1rem;
+  border: 1px solid rgba(120, 239, 166, 0.7);
+  background-color: transparent;
+  color: rgb(120, 239, 166);
 }
+
 #formSubmitButton:hover {
-  border: 1px solid rgb(120, 239, 166);
-  border-radius: 0.2rem;
-  height: 2rem;
-  width: 10rem;
-  color: rgb(120, 239, 166);
-  background-color: rgb(32, 65, 45);
   cursor: pointer;
-  opacity: 0.6;
+  background-color: rgba(120, 239, 166, 0.1);
 }
+
 #formSubmitButton:active {
-  border: 1px solid rgb(120, 239, 166);
-  border-radius: 0.2rem;
-  height: 2rem;
-  width: 10rem;
-  color: rgb(120, 239, 166);
   background-color: transparent;
-  cursor: pointer;
-  opacity: 0.6;
 }
