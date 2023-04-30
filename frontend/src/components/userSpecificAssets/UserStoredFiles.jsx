@@ -11,6 +11,7 @@ import { collection, onSnapshot, doc, deleteDoc } from "firebase/firestore";
 
 import "./UserStoredFiles.css";
 import binImage from "../../assets/bin.svg";
+import cloneImage from "../../assets/clone.svg";
 
 export default function UserStoredFiles() {
   const [fetchedDocs, setFetchedDocs] = useState([
@@ -31,13 +32,13 @@ export default function UserStoredFiles() {
   useEffect(() => {
     if ($currentUserUid) {
       const userCollectionRef = collection(db, $currentUserUid);
-      // console.log("userCollectionRef : ", userCollectionRef);
+      console.log("userCollectionRef : ", userCollectionRef);
       onSnapshot(userCollectionRef, (querySnapshot) => {
         const tempSavedFilesDataArray = [];
         querySnapshot.forEach((doc) => {
           tempSavedFilesDataArray.push({ id: doc.id, ...doc.data() });
         });
-        // console.log("tempSavedFilesDataArray : ", tempSavedFilesDataArray);
+        console.log("tempSavedFilesDataArray : ", tempSavedFilesDataArray);
 
         setFetchedDocs(tempSavedFilesDataArray);
         filesfetchedFromFirestore.set(tempSavedFilesDataArray);
@@ -66,38 +67,47 @@ export default function UserStoredFiles() {
   return (
     <div className={displayStatusClass}>
       <div className="tableAndFileExplorer">
-        <table className="styled-table table-responsive">
+        <table className="styled-table">
           <thead>
             <tr>
               <th>File Name</th>
               <th>File Size (KB)</th>
               <th>Saved On</th>
               <th>File Type</th>
-              {/* <th>Panel Link</th> */}
+              <th>
+              </th>
               <th></th>
             </tr>
           </thead>
           <tbody>
             {$filesfetchedFromFirestore.map((file, index) => {
               return (
-                <tr className="tooltip2" key={index} onClick={() => {navigator.clipboard.writeText(file.panelLink)}}
+                <tr key={index}
                 >
                   <td>{file.fileName}</td>
                   <td>{file.fileSize}</td>
                   <td>{file.savedAt}</td>
                   <td>{file.fileType}</td>
-                  {/* <td>{file.panelLink}</td> */}
                   <td
                     id="deleteDoc"
+                    className="tooltip2" 
                     onClick={() => {
                       depopulateSavedFilesContainer(file.id);
                     }}
                   >
                     <img id="binImage" src={binImage} width="16" alt="bin" />
+                    <span className="tooltiptext2">Delete Panel</span>
                   </td>
-                  <span class="tooltiptext2">Copy Panel ID</span>
+                  <td
+                    id="copyLink"
+                    className="tooltip2" 
+                    onClick={() => { navigator.clipboard.writeText(file.panelLink) }}
+                  >
+                    <img id="copyLink" src={cloneImage} width="16" alt="clone" />
+                    <span className="tooltiptext2">Panel Link</span>
+                  </td>
+                  {/* */}
                 </tr>
-                
               );
             })}
           </tbody>

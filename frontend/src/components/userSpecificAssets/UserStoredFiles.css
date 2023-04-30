@@ -1,73 +1,71 @@
 .userSpecificAssetsDisplayed {
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: center;
-  align-items: center;
+  display: block;
+  margin: 0 auto;
+  width: 100%;
 }
 
 .userSpecificAssetsNotDisplayed {
   display: none;
 }
 
-#greetUser {
-  color: white;
-}
-
-#greetUser mark {
-  border: 1px solid blue;
-  border-radius: 5px;
-  color: blue;
-  padding: 1px;
-  background: transparent;
-}
-
 .tableAndFileExplorer {
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: space-between;
-  align-items: center;
-  /* gap:5rem; */
+  overflow-x: auto;
+  width: 100%;
 }
 
 .styled-table {
-  border-collapse: collapse;
-  margin: 25px 0;
   font-size: 0.9em;
-  font-family: sans-serif;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+  font-family: var(--font-mono), JetBrains Mono, ui-monospace, SFMono-Regular,
+    Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  border: 1px solid rgba(204, 204, 220, 0.07);
+  color: rgba(204, 204, 220, 0.65);
+  background-color: rgb(24, 27, 31);
+  padding: 2rem 2rem;
+  width:100%;
 }
 
 .styled-table thead tr {
-  background-color: rgb(31, 31, 32);
-  color: #959557;
   text-align: left;
-  border: 1px solid rgb(0, 0, 0);
 }
 
 .styled-table tbody tr {
-  color: white;
-  background-color: rgb(0, 0, 0);
-  border-bottom: 1px solid rgb(37, 37, 40);
   text-align: left;
 }
 
 .styled-table tbody tr:hover {
-  background-color: rgb(13, 13, 13);
-  color: #959557;
+  color: rgba(204, 204, 220, 0.95);
+  background-color: rgb(22, 24, 26);
+}
+
+#deleteDoc {
+  opacity: 0;
+}
+
+#copyLink {
+  opacity: 0;
+}
+
+#deleteDoc:hover {
+  opacity: 1;
   cursor: pointer;
 }
 
-.styled-table tbody tr:active {
-  background-color: rgb(13, 13, 13);
-  color: #6cd8e9;
+#copyLink:hover {
+  opacity: 1;
   cursor: pointer;
+}
+
+.styled-table tbody tr:hover #deleteDoc {
+  opacity: 0.7;
+}
+
+.styled-table tbody tr:hover #copyLink {
+  opacity: 0.9;
 }
 
 .styled-table th {
-  border: 1px solid rgb(37, 37, 40);
-  border-bottom: 1px solid rgb(101, 101, 101);
+  border-bottom: 1px solid rgba(204, 204, 220, 0.07);
   color: rgb(67, 220, 131);
-  font-weight: lighter;
   padding: 12px 15px;
   opacity: 0.7;
 }
@@ -75,15 +73,8 @@
 .styled-table td {
   padding: 12px 15px;
   opacity: 0.7;
-}
+  border-right: 1px solid rgba(204, 204, 220, 0.07);
 
-#deleteDoc{
-  /* border: 1px solid #e62747; */
-  opacity:0.3;
-}
-
-#deleteDoc:hover{
-  opacity:0.8;
 }
 
 .selectedFileActionOptions img {
@@ -96,10 +87,8 @@
   opacity: 0.8;
 }
 
-/* copy tooltip CSS */
 .tooltip2 {
   position: relative;
-  /* display: inline-block; */
 }
 
 .tooltip2 .tooltiptext2 {
@@ -112,8 +101,8 @@
   padding: 5px 0;
   position: absolute;
   z-index: 1;
-  bottom: 125%;
-  left: 50%;
+  bottom: 120%;
+  left: 15%;
   margin-left: -65px;
   opacity: 0;
   transition: opacity 0.3s;
@@ -126,9 +115,6 @@
   top: 100%;
   left: 50%;
   margin-left: -5px;
-  border-width: 10px;
-  border-style: solid;
-  border-color: rgb(13, 13, 13) transparent transparent transparent;
 }
 
 .tooltip2:hover .tooltiptext2 {
