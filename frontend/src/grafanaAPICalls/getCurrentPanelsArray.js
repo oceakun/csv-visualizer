@@ -17,16 +17,17 @@ export default async function getDashboard() {
     const resp = await axios.get(url);
     // handle response
     console.log(resp.data);
-    console.log("getdashboard response : ", resp);
+    // console.log("getdashboard response : ", resp);
     currentPanelsArray.set(resp.data.dashboard.panels);
-    const lengthOfCurrentArray = lengthOfArray($currentPanelsArray);
+    // console.log("currentPanelsArray.get() : ", currentPanelsArray.get());
+    const lengthOfCurrentArray = lengthOfArray(currentPanelsArray.get());
+    console.log("lengthOfCurrentArray : ", lengthOfCurrentArray);
     localStorage.setItem("newPanelId", JSON.stringify(lengthOfCurrentArray + 1));
-    newPanelID.set( JSON.parse(localStorage.getItem("newPanelId")));
+    newPanelID.set( lengthOfCurrentArray+1);
     console.log("newPanelID : ", newPanelID.get());
     console.log("dashboard fetched : ", $currentPanelsArray);
   } catch (error) {
     // handle error
     console.error(error);
   }
-  
 }
