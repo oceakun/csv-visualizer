@@ -16,6 +16,10 @@ export default async function updateDashboard() {
   const $fileName = JSON.parse(localStorage.getItem("fileName"));
 
   const bearerToken = import.meta.env.PUBLIC_BEARER_TOKEN;
+  const folderUID = import.meta.env.PUBLIC_FOLDER_UID;
+  const dashboardUID = import.meta.env.PUBLIC_DASHBOARD_UID;
+  const dashboardTitle = import.meta.env.PUBLIC_DASHBOARD_TITLE;
+  const folderTitle = import.meta.env.PUBLIC_FOLDER_TITLE;
 
   console.log("$newDataSourceUID : ", $newDataSourceUID);
   console.log("$fileName : ", $fileName);
@@ -114,13 +118,13 @@ export default async function updateDashboard() {
   // defining the data to be posted to the dashboard endpoint so as to create a new panel while the others persist
   const data = {
     dashboard: {
-      id: 1,
-      title: "MyPublicDashboard",
+      uid: dashboardUID,
+      title: dashboardTitle,
       panels: [...$currentPanelsArray, newPanelConfig],
     },
     folderId: 2,
-    folderTitle: "csv-visualizer-dashboard",
-    folderUid: "XZJcV2a4k",
+    folderTitle: folderTitle,
+    folderUid: folderUID,
     message: "New panel added through API",
     overwrite: true,
   };
