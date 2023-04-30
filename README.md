@@ -63,3 +63,7 @@ csv-visualizer, a simple full-stack web app that accepts csv exports and renders
   > documents are fetched from firestore and the container is populated
 - user clicks on trash can
   > document is deleted from the firestore collection specific to the user
+
+## new features in the pipeline
+1. a "queries" feature for users to set custom queries on uploaded file, to draw visualization in the form of charts
+2. a "screenshot" feature that allows users to capture the rendered visualization 
