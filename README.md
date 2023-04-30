@@ -19,7 +19,7 @@ csv-visualizer, a simple full-stack web app that accepts csv exports and renders
 - browse through your computer to choose a csv file
 - click on 'Submit'
 - click anywhere outside the modal to close it
-- click om 'Visualize' and tadaa..your csv file visualized through a grafana panel, in a tabular format
+- click on 'Visualize' and tadaa..your csv file visualized through a grafana panel, in a tabular format
 
 ![image](https://user-images.githubusercontent.com/83641627/235371155-ee82eb54-bb2d-43f9-808d-adb0ffc4a590.png)
 
@@ -29,7 +29,7 @@ csv-visualizer, a simple full-stack web app that accepts csv exports and renders
 ### register
 - click on the "Sign-In" button (in the header)
 
-![image](https://user-images.githubusercontent.com/83641627/235371398-3d4769ce-a566-4bb3-8117-7b50c009cf2b.png)
+![image](https://user-images.githubusercontent.com/83641627/235372162-99902a60-1735-4aae-a34a-e735fab229f9.png)
 
 - click on 'New here? Sign Up'
 
