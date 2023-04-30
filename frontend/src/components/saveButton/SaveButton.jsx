@@ -51,7 +51,7 @@ export default function SaveButton() {
       fileType: $fileType,
       savedAt: `${
         monthsArray[$savedAt.getMonth()]
-      },${$savedAt.getDay()},${$savedAt.getYear()} at ${$savedAt.getHours()}:${$savedAt.getMinutes()}:${$savedAt.getSeconds()} `,
+      },${$savedAt.getDate()},${$savedAt.getFullYear()} at ${$savedAt.getHours()}:${$savedAt.getMinutes()}:${$savedAt.getSeconds()} `,
       panelLink: panelBaseurl + $newPanelID,
     };
 

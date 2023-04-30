@@ -1,13 +1,20 @@
 #saveBtn {
-  border-radius: 0.2rem;
+  border-radius: 2px;
   height: 2rem;
-  width: 10rem;
-  background-color: rgb(8, 8, 36);
-  color: rgb(8, 8, 36);
+  /* width: 10rem; */
+  padding:0rem 1rem;
+  background-color: transparent;
+  color: rgb(218, 98, 196);
   cursor: pointer;
-  border: none;
-  background-image: linear-gradient(-35deg, #baef89 40%, #8995ef);
+  border: solid 1px rgba(218, 98, 196,0.7);
+  
 }
+
+#saveBtn:hover {
+  background-color: rgba(218, 98, 196, 0.1);
+  color: rgb(255, 62, 191);
+}
+
 
 #saveButtonDisplayed {
   display: flex;
