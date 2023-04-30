@@ -7,8 +7,8 @@ export default async function createNewDataSource() {
 
   const $fileName = JSON.parse(localStorage.getItem("fileName"));
   const dataSourceName = `CSV-${$fileName}-${uuidv4()}`;
-  const dataSourceBaserl = import.meta.env.PUBLIC_DATASOURCE_STATIC_FILE_URL;
-  const dataSourceUrl = dataSourceBaserl + $fileName;
+  const dataSourceBaseUrl = import.meta.env.PUBLIC_DATASOURCE_STATIC_FILE_URL;
+  const dataSourceUrl = dataSourceBaseUrl + $fileName;
 
   const url = import.meta.env.PUBLIC_POST_DATASOURCE_URL;
 
