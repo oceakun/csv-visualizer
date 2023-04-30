@@ -1,0 +1,75 @@
+.container {
+    border: 1px solid rgba(204, 204, 220, 0.07);
+    color: rgba(204, 204, 220, 0.65);
+    background-color: rgb(24, 27, 31);
+    padding: 0.5rem 2rem;
+    /* margin-top: 15rem; */
+}
+
+#iframeActions {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding: 1rem 0rem;
+}
+
+iframe {
+    display: block;
+    width: 100%;
+    height: 85%;
+    /* min-height: 800px;
+    min-width:600px; */
+    border: none;
+}
+
+#screenshotImage {
+    background: rgba(198, 130, 238, 0.08);
+    border: 1px solid rgba(198, 130, 238, 0.26);
+    border-radius: 4px;
+    padding: 0.3rem;
+    opacity: 0.7;
+}
+
+#screenshotImage:hover {
+    background: rgba(198, 130, 238, 0.18);
+    cursor: pointer;
+}
+
+#screenshotImage:active {
+    background: rgba(198, 130, 238, 0.08);
+}
+
+#downloadImage {
+    background: rgba(198, 130, 238, 0.08);
+    border: 1px solid rgba(198, 130, 238, 0.26);
+    border-radius: 4px;
+    padding: 0.3rem;
+    opacity: 0.7;
+}
+
+#downloadImage:hover {
+    background: rgba(198, 130, 238, 0.18);
+    cursor: pointer;
+}
+
+#downloadImage:active {
+    background: rgba(198, 130, 238, 0.08);
+}
+
+#cloneImage {
+    background: rgba(198, 130, 238, 0.08);
+    border: 1px solid rgba(198, 130, 238, 0.26);
+    border-radius: 4px;
+    padding: 0.3rem;
+    opacity: 0.7;
+}
+
+#cloneImage:hover {
+    background: rgba(198, 130, 238, 0.18);
+    cursor: pointer;
+}
+
+#cloneImage:active {
+    background: rgba(198, 130, 238, 0.08);
+}
